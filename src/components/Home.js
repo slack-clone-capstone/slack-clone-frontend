@@ -1,19 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useUserContext } from "../context/userContext";
+import { useWorkspaceContext } from "../context/workspaceContext";
 import Header from "./common/Header";
 import Sidebar from "./common/Sidebar";
 import Body from "./common/Body";
 
-// import SightingPreviewList from "./SightingPreviewList";
+const Home = () => {
+  const { userId, setUserId } = useUserContext();
+  const { workspaceId, setWorkspaceId } = useWorkspaceContext();
 
-const Home = () => (
-  <div>
-    <Header />
+  return (
     <div>
-      <Sidebar />
-      <Body />
+      <Header setUserId={setUserId} setWorkspaceId={setWorkspaceId} />
+      <div>
+        <Sidebar />
+        <Body />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Home;

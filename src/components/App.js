@@ -1,12 +1,46 @@
-import React from "react";
-import "./App.css";
-import "mdb-react-ui-kit/dist/css/mdb.min.css";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router";
+import { useUserContext } from "../context/userContext";
+import { useWorkspaceContext } from "../context/workspaceContext";
+import LoggedInLayout from "../navigation/LoggedInLayout";
+import LoggedOutLayout from "../navigation/LoggedOutLayout";
+import Workspace from "./Workspace";
+import Home from "./Home";
+import Login from "./Login";
 
-const App = () => (
-  <div className="App">
-    <Outlet />
-  </div>
-);
+const App = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth0();
+  const { userId } = useUserContext();
+  const { workspaceId } = useWorkspaceContext();
+
+  useEffect(() => {
+    console.log("isAuthenticated", isAuthenticated);
+
+    // if (!isAuthenticated) {
+    //   navigate("/login");
+    //   // } else if (!workspaceId) {
+    //   //   navigate("/workspace");
+    // } else {
+    //   navigate("/");
+    // }
+  }, []);
+
+  return (
+    <div className="App">
+      <Routes>
+        <Route element={<LoggedOutLayout />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+        <Route element={<LoggedInLayout />}>
+          <Route path="/workspace" element={<Workspace />} />
+          <Route path="/" element={<Home />} />
+        </Route>
+      </Routes>
+    </div>
+  );
+};
 
 export default App;
