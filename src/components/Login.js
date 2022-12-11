@@ -23,7 +23,7 @@ const Login = () => {
   const handleClickLogin = async () => {
     if (!isAuthenticated) {
       loginWithPopup();
-      //loginWithRedirect(); // does not work
+      // loginWithRedirect(); // does not work
       return;
     }
 

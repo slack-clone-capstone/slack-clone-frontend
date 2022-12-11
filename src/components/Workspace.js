@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router";
+import { createPath, useNavigate } from "react-router";
 import { useUserContext } from "../context/userContext";
 import { useWorkspaceContext } from "../context/workspaceContext";
 import axios from "axios";
@@ -16,16 +16,11 @@ const Workspace = () => {
   const [workspaceList, setWorkspaceList] = useState();
 
   useEffect(() => {
-    // setUserId(1);
-    console.log(userId);
-
     const getWorkspaceData = async () => {
       const accessToken = await getAccessTokenSilently({
         audience: process.env.REACT_APP_AUDIENCE,
         scope: process.env.REACT_APP_SCOPE,
       });
-
-      console.log(accessToken);
 
       const response = await axios.get(
         `${BACKEND_URL}/userWorkspaces/workspaces`,
@@ -34,8 +29,6 @@ const Workspace = () => {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-
-      console.log(response);
       setWorkspace(response.data);
 
       const responseNumArr = [];
@@ -50,7 +43,6 @@ const Workspace = () => {
         );
         responseNumArr.push(responseNum.data[0].count);
       }
-      console.log(responseNumArr);
 
       setWorkspaceNumUsers(responseNumArr);
 
@@ -58,47 +50,57 @@ const Workspace = () => {
 
       for (let i = 0; i < response.data.length; i += 1) {
         const workspaceItem = {};
+        workspaceItem["id"] = response.data[i].id;
         workspaceItem["name"] = response.data[i].name;
         workspaceItem["userCount"] = responseNumArr[i];
         workspaceListArr.push(workspaceItem);
       }
 
-      console.log(workspaceListArr);
       setWorkspaceList(workspaceListArr);
     };
 
     if (userId) {
       getWorkspaceData();
     }
-
-    console.log(workspace, workspaceNumUsers, workspaceList);
   }, []);
 
   const handleClick = (e) => {
-    console.log(e.target.id);
-    setWorkspaceId(e.target.id); // TBC
-
+    setWorkspaceId(e.target.id);
     navigate("/");
   };
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <div>Welcome Back</div>
-      <div>Workspaces for {user.email}</div>
-      <div>
-        {workspaceList?.map((workspace, index) => (
-          <button
-            onClick={handleClick}
-            key={index}
-            id={index}
-            style={{ display: "block" }}
-          >
-            <div>{workspace.name}</div>
-            <div>{workspace.userCount} members</div>
-          </button>
-        ))}
+      <div className="row">
+        <div>Workspaces for {user.email}</div>
+        <>
+          {workspaceList?.map((workspace, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+            >
+              <div>
+                <div>{workspace.name}</div>
+                <div>{workspace.userCount} members</div>
+              </div>
+              <button onClick={handleClick} id={workspace.id}>
+                Launch Slack
+              </button>
+            </div>
+          ))}
+        </>
       </div>
-    </>
+    </div>
   );
 };
 
