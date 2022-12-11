@@ -11,23 +11,6 @@ import Home from "./Home";
 import Login from "./Login";
 
 const App = () => {
-  const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth0();
-  const { userId } = useUserContext();
-  const { workspaceId } = useWorkspaceContext();
-
-  useEffect(() => {
-    console.log("isAuthenticated", isAuthenticated);
-
-    // if (!isAuthenticated) {
-    //   navigate("/login");
-    //   // } else if (!workspaceId) {
-    //   //   navigate("/workspace");
-    // } else {
-    //   navigate("/");
-    // }
-  }, []);
-
   return (
     <div className="App">
       <Routes>

@@ -9,7 +9,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { userId, setUserId } = useUserContext();
   const {
-    logout,
     user,
     loginWithRedirect,
     isAuthenticated,
@@ -18,20 +17,13 @@ const Login = () => {
   } = useAuth0();
 
   useEffect(() => {
-    console.log(userId);
-    console.log("login page");
-    console.log("user", user);
-    console.log("isAuthenticated", isAuthenticated);
     handleClickLogin();
   }, [user]);
 
   const handleClickLogin = async () => {
-    console.log("clicked login button");
-    console.log(isAuthenticated);
-
     if (!isAuthenticated) {
       loginWithPopup();
-      // loginWithRedirect() does not work
+      //loginWithRedirect(); // does not work
       return;
     }
 
@@ -39,8 +31,6 @@ const Login = () => {
       audience: process.env.REACT_APP_AUDIENCE,
       scope: process.env.REACT_APP_SCOPE,
     });
-
-    console.log("here");
 
     const response = await axios.post(
       `${BACKEND_URL}/users`,
@@ -53,25 +43,15 @@ const Login = () => {
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
 
-    console.log(response);
-    console.log(accessToken);
-    setUserId(response.data.id);
+    // setUserId(response.data.id);
+    setUserId(1); // for testing purposes
 
-    console.log(userId);
     navigate("/workspace");
   };
 
-  // to remove logout button as logout button will be in header
   return (
     <>
       <button onClick={handleClickLogin}>Login</button>
-      <button
-        onClick={() => {
-          logout();
-        }}
-      >
-        Log Out
-      </button>
     </>
   );
 };
