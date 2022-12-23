@@ -8,45 +8,51 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const { userId, setUserId } = useUserContext();
-  const {
-    user,
-    loginWithRedirect,
-    isAuthenticated,
-    getAccessTokenSilently,
-    loginWithPopup,
-  } = useAuth0();
+  // const {
+  //   user,
+  //   loginWithRedirect,
+  //   isAuthenticated,
+  //   getAccessTokenSilently,
+  //   loginWithPopup,
+  // } = useAuth0();
 
-  useEffect(() => {
-    handleClickLogin();
-  }, [user]);
+  // useEffect(() => {
+  //   handleClickLogin();
+  // }, [user]);
 
-  const handleClickLogin = async () => {
-    if (!isAuthenticated) {
-      loginWithPopup();
-      // loginWithRedirect(); // does not work
-      return;
-    }
+  // const handleClickLogin = async () => {
+  //   if (!isAuthenticated) {
+  //     loginWithPopup();
+  //     // loginWithRedirect(); // does not work
+  //     return;
+  //   }
 
-    const accessToken = await getAccessTokenSilently({
-      audience: process.env.REACT_APP_AUDIENCE,
-      scope: process.env.REACT_APP_SCOPE,
-    });
+  //   const accessToken = await getAccessTokenSilently({
+  //     audience: process.env.REACT_APP_AUDIENCE,
+  //     scope: process.env.REACT_APP_SCOPE,
+  //   });
 
-    const response = await axios.post(
-      `${BACKEND_URL}/users`,
-      {
-        firstName: user.given_name,
-        lastName: user.family_name,
-        email: user.email,
-        username: user.name,
-      },
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
+  //   const response = await axios
+  //     .post(
+  //     `${BACKEND_URL}/users`,
+  //     {
+  //       firstName: user.given_name,
+  //       lastName: user.family_name,
+  //       email: user.email,
+  //       username: user.name,
+  //     },
+  //     { headers: { Authorization: `Bearer ${accessToken}` } }
+  //     );
 
-    // setUserId(response.data.id);
-    setUserId(1); // for testing purposes
+  //   setUserId(response.data.id);
+  //   setUserId(1); // for testing purposes
 
-    navigate("/workspace");
+  //   navigate("/workspace");
+  // };
+
+  const handleClickLogin = () => {
+    console.log("test");
+    navigate(`/workspace`);
   };
 
   return (
