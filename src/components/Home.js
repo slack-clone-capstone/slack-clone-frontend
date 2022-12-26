@@ -15,6 +15,7 @@ const socket = io.connect("http://localhost:3002", {
 const Home = () => {
   const { userId, setUserId } = useUserContext();
   const { workspaceId, setWorkspaceId } = useWorkspaceContext();
+
   //Room State
   const [room, setRoom] = useState("");
   // Messages States

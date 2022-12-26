@@ -9,14 +9,16 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    {/* <Auth0Provider
-      domain={process.env.REACT_APP_DOMAIN}
-      clientId={process.env.REACT_APP_CLIENTID}
-      redirectUri={window.location.origin}
-      audience={process.env.REACT_APP_AUDIENCE}
-      scope={process.env.REACT_APP_SCOPE}
-    > */}
+  // <React.StrictMode>
+  <Auth0Provider
+    domain={process.env.REACT_APP_DOMAIN}
+    clientId={process.env.REACT_APP_CLIENTID}
+    redirectUri={window.location.origin}
+    audience={process.env.REACT_APP_AUDIENCE}
+    scope={process.env.REACT_APP_SCOPE}
+    useRefreshTokens={true}
+    cacheLocation="localstorage"
+  >
     <BrowserRouter>
       <UserContextProvider>
         <WorkspaceContextProvider>
@@ -24,6 +26,6 @@ root.render(
         </WorkspaceContextProvider>
       </UserContextProvider>
     </BrowserRouter>
-    {/* </Auth0Provider> */}
-  </React.StrictMode>
+  </Auth0Provider>
+  // </React.StrictMode>
 );

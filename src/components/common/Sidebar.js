@@ -7,7 +7,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../constants";
 
 const Sidebar = () => {
-  // const { user, getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently } = useAuth0();
   const { userId } = useUserContext();
   const { workspaceId, setWorkspaceId } = useWorkspaceContext();
   const [chats, setChats] = useState();
@@ -15,33 +15,32 @@ const Sidebar = () => {
 
   useEffect(() => {
     const getChats = async () => {
-      // const accessToken = await getAccessTokenSilently({
-      //   audience: process.env.REACT_APP_AUDIENCE,
-      //   scope: process.env.REACT_APP_SCOPE,
-      // });
+      const accessToken = await getAccessTokenSilently({
+        audience: process.env.REACT_APP_AUDIENCE,
+        scope: process.env.REACT_APP_SCOPE,
+      });
 
-      // const response = await axios.get(
-      //   `${BACKEND_URL}/chats/`,
-      //   {
-      //     params: { userId: userId },
-      //     headers: { Authorization: `Bearer ${accessToken}` },
-      //   }
-      // );
-      // setChats(response.data);
+      const response = await axios.get(`${BACKEND_URL}/chats/`, {
+        params: { userId: userId, workspaceId: workspaceId },
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setChats(response.data);
+      console.log(response.data);
+      console.log("chats retrieved for " + user.given_name);
 
-      // const responseNumArr = [];
+      const responseNumArr = [];
 
       const chatsListArr = [];
 
-      // for (let i = 0; i < response.data.length; i += 1) {
-      //   const chatItem = {};
-      //   chatItem["id"] = response.data[i].id;
-      //   chatItem["type"] = response.data[i].type;
-      //   chatItem["channelName"] = response.data[i].channel_name;
-      //   chatItem["channelDescription"] = response.data[i].channel_description;
-      //   chatItem["channelPrivate"] = response.data[i].channel_private;
-      //   chatsListArr.push(chatItem);
-      // }
+      for (let i = 0; i < response.data.length; i += 1) {
+        const chatItem = {};
+        chatItem["id"] = response.data[i].id;
+        chatItem["type"] = response.data[i].type;
+        chatItem["channelName"] = response.data[i].channel_name;
+        chatItem["channelDescription"] = response.data[i].channel_description;
+        chatItem["channelPrivate"] = response.data[i].channel_private;
+        chatsListArr.push(chatItem);
+      }
 
       setChatsList(chatsListArr);
     };
@@ -61,7 +60,7 @@ const Sidebar = () => {
     <div className="Sidebar">
       {/* to integrate with MUI for user to toggle to other workspaces:
       https://mui.com/material-ui/react-select/#native-select */}
-      <div>{workspaceId}</div>
+      <div>Workspace name: "{workspaceId}" </div>
       {chatsList?.map((chat, index) => (
         <div
           key={index}
