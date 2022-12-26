@@ -6,7 +6,19 @@ const WorkspaceContext = React.createContext();
 // provide context
 const WorkspaceContextProvider = ({ children }) => {
   const [workspaceId, setWorkspaceId] = useState();
-  const value = { workspaceId, setWorkspaceId };
+  const [selectedWorkspace, setSelectedWorkspace] = useState();
+  const [selectedChat, setSelectedChat] = useState("");
+  const [selectedChatId, setSelectedChatId] = useState();
+  const value = {
+    workspaceId,
+    setWorkspaceId,
+    selectedWorkspace,
+    setSelectedWorkspace,
+    selectedChat,
+    setSelectedChat,
+    selectedChatId,
+    setSelectedChatId,
+  };
 
   return (
     <WorkspaceContext.Provider value={value}>
