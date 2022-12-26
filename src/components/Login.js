@@ -14,24 +14,23 @@ const Login = () => {
     isAuthenticated,
     getAccessTokenSilently,
     loginWithPopup,
+    logout,
+    isLoading,
   } = useAuth0();
 
+  // ?to implement refactoring on calling of the user info: https://github.com/auth0/auth0-react/issues/145
+  // interestingly, this current method still enables user's data (e.g. given_name etc) to be passed to backend despite error being console.log.
   useEffect(() => {
-    handleClickLogin();
-  }, [user]);
+    // const interval = setInterval(() => {
+    //   console.log("This will run every second!");
+    postUserBackend();
+    // }, 1000);
+    // return () => clearInterval(interval);
+  }, [isAuthenticated]);
 
-  const handleClickLogin = async () => {
-    if (!isAuthenticated) {
-      loginWithPopup();
-      // loginWithRedirect(); // does not work
-      return;
-    }
-
-    const accessToken = await getAccessTokenSilently({
-      audience: process.env.REACT_APP_AUDIENCE,
-      scope: process.env.REACT_APP_SCOPE,
-    });
-
+  const postUserBackend = async () => {
+    const accessToken = await getAccessTokenSilently({});
+    console.log("Posting to backend user data... " + user);
     const response = await axios.post(
       `${BACKEND_URL}/users`,
       {
@@ -43,14 +42,30 @@ const Login = () => {
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
 
-    // setUserId(response.data.id);
-    setUserId(1); // for testing purposes
-
+    setUserId(response.data.id);
+    console.log("Backend user data updated.");
     navigate("/workspace");
+  };
+
+  const handleClickLogin = async () => {
+    console.log("Is user authenticated? " + isAuthenticated);
+    if (!isAuthenticated) {
+      // either option works
+      // await loginWithPopup();
+      await loginWithRedirect();
+    }
+    navigate("/workspace");
+  };
+
+  const handleClickLogout = () => {
+    console.log("logout");
+    navigate(`/login`);
+    logout();
   };
 
   return (
     <>
+      <button onClick={handleClickLogout}>Logout</button>
       <button onClick={handleClickLogin}>Login</button>
     </>
   );

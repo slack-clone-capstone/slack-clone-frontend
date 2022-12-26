@@ -1,0 +1,19 @@
+.Header {
+  background-color: rgb(18, 16, 22);
+  border-color: rgba(45, 47, 52, 1);
+}
+
+.Home-content {
+  display: flex;
+}
+
+.Sidebar-content {
+  flex: 20%;
+  max-width: 280px;
+  min-width: 120px;
+  background-color: rgb(18, 16, 22);
+  border-color: rgba(45, 47, 52, 1);
+}
+
+.Body-content {
+}
