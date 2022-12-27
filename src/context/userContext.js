@@ -6,7 +6,22 @@ const UserContext = React.createContext();
 // provide context
 const UserContextProvider = ({ children }) => {
   const [userId, setUserId] = useState();
-  const value = { userId, setUserId };
+  const [userFirstName, setUserFirstName] = useState("");
+  const [userLastName, setUserLastName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userUsername, setUsername] = useState("");
+  const value = {
+    userId,
+    setUserId,
+    userFirstName,
+    setUserFirstName,
+    userLastName,
+    setUserLastName,
+    userEmail,
+    setUserEmail,
+    userUsername,
+    setUsername,
+  };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

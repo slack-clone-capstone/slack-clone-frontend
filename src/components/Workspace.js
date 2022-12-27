@@ -1,19 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { createPath, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useUserContext } from "../context/userContext";
 import { useWorkspaceContext } from "../context/workspaceContext";
 import axios from "axios";
 import { BACKEND_URL } from "./constants";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const Workspace = () => {
   const navigate = useNavigate();
   const { user, getAccessTokenSilently, logout } = useAuth0();
-  const { userId, setUserId } = useUserContext();
-  const { setWorkspaceId } = useWorkspaceContext();
+  const {
+    userId,
+    setUserId,
+    setUserFirstName,
+    setUserLastName,
+    setUserEmail,
+    setUsername,
+  } = useUserContext();
+  const { setWorkspaceId, setSelectedWorkspace } = useWorkspaceContext();
   const [workspace, setWorkspace] = useState();
   const [workspaceNumUsers, setWorkspaceNumUsers] = useState();
   const [workspaceList, setWorkspaceList] = useState();
+  const [open, setOpen] = useState(false);
+  const [newWorkspaceName, setNewWorkspaceName] = useState("");
 
   const postUserBackend = async () => {
     const accessToken = await getAccessTokenSilently({});
@@ -31,6 +55,10 @@ const Workspace = () => {
     );
     setUserId(response.data.id);
     console.log("Backend user data updated.");
+    setUserFirstName(user.given_name);
+    setUserLastName(user.family_name);
+    setUserEmail(user.email);
+    setUsername(user.name);
   };
 
   const getWorkspaceData = async () => {
@@ -46,7 +74,6 @@ const Workspace = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
     );
-    setWorkspace(response.data);
 
     const responseNumArr = [];
 
@@ -86,12 +113,27 @@ const Workspace = () => {
 
   const handleClick = (e) => {
     setWorkspaceId(e.target.id);
+    setSelectedWorkspace(e.target.name);
     navigate("/");
   };
 
   const handleClickLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const createNewWorkspace = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = (e) => {
+    // to add in backend routing for creating new workspace with user
+    // navigate("/workspace");
+    e.preventdefault();
   };
 
   return (
@@ -119,13 +161,44 @@ const Workspace = () => {
                 <div>{workspace.name}</div>
                 <div>{workspace.userCount} members</div>
               </div>
-              <button onClick={handleClick} id={workspace.id}>
+              <button
+                onClick={handleClick}
+                id={workspace.id}
+                name={workspace.name}
+              >
                 Launch Slack
               </button>
             </div>
           ))}
         </>
       </div>
+      <button onClick={createNewWorkspace}>Create a new Workspace</button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Create a new workspace
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <label>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                New workspace name:
+              </Typography>
+              <input
+                name="workspace-name"
+                type="text"
+                value={newWorkspaceName}
+                onChange={(e) => setNewWorkspaceName(e.target.value)}
+              />
+            </label>
+            <input type="submit" value="Create Workspace" />
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 };

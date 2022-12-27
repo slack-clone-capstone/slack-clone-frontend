@@ -1,6 +1,8 @@
 .Header {
   background-color: rgb(18, 16, 22);
   border-color: rgba(45, 47, 52, 1);
+  border-width: 2px;
+  border-style: solid;
 }
 
 .Home-content {
@@ -16,4 +18,48 @@
 }
 
 .Body-content {
+  background-color: rgb(18, 16, 22);
+  color: white;
+}
+
+.Body-channel-header {
+  border-color: rgba(45, 47, 52, 1);
+  border-width: 2px;
+  border-style: solid;
+  margin: 0;
+  font-size: 18px;
+}
+
+.Message {
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+}
+
+.Message-profile-photo {
+  height: 36px;
+  line-height: 36px;
+  width: 36px;
+  background-color: rgba(30, 75, 63, 1);
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  margin: 3px;
+}
+
+.Message-profile-name {
+  font-weight: bolder;
+  font-size: 15px;
+  margin: 2px;
+}
+
+.Message-profile-time {
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+.Message-text {
+  font-weight: bold;
+  font-size: 15px;
+  margin: 2px;
 }
