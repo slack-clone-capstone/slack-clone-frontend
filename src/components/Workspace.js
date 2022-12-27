@@ -39,27 +39,27 @@ const Workspace = () => {
   const [open, setOpen] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
 
-  const postUserBackend = async () => {
-    const accessToken = await getAccessTokenSilently({});
-    console.log("Posting to backend user data... " + user);
+  // const postUserBackend = async () => {
+  //   const accessToken = await getAccessTokenSilently({});
+  //   console.log("Posting to backend user data... " + user);
 
-    const response = await axios.post(
-      `${BACKEND_URL}/users`,
-      {
-        firstName: user.given_name,
-        lastName: user.family_name,
-        email: user.email,
-        username: user.name,
-      },
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
-    setUserId(response.data.id);
-    console.log("Backend user data updated.");
-    setUserFirstName(user.given_name);
-    setUserLastName(user.family_name);
-    setUserEmail(user.email);
-    setUsername(user.name);
-  };
+  //   const response = await axios.post(
+  //     `${BACKEND_URL}/users`,
+  //     {
+  //       firstName: user.given_name,
+  //       lastName: user.family_name,
+  //       email: user.email,
+  //       username: user.name,
+  //     },
+  //     { headers: { Authorization: `Bearer ${accessToken}` } }
+  //   );
+  //   setUserId(response.data.id);
+  //   console.log("Backend user data updated.");
+  //   setUserFirstName(user.given_name);
+  //   setUserLastName(user.family_name);
+  //   setUserEmail(user.email);
+  //   setUsername(user.name);
+  // };
 
   const getWorkspaceData = async () => {
     const accessToken = await getAccessTokenSilently({

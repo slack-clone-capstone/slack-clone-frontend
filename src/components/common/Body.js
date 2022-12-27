@@ -13,14 +13,14 @@ const socket = io.connect("http://localhost:3002", {
 
 const Body = () => {
   const { selectedChat, selectedChatId } = useWorkspaceContext();
-  const { userId, userFirstName, userLastName, userEmail, userUsername } =
+  const { userId, userUsername, userFirstName, userLastName } =
     useUserContext();
   const { getAccessTokenSilently } = useAuth0();
 
   // Messages States
   const [messagesList, setMessagesList] = useState();
-  const [message, setMessage] = useState("");
-  const [messageReceived, setMessageReceived] = useState("");
+  const [messageTyped, setMessageTyped] = useState("");
+  const [messageReceived, setMessageReceived] = useState([]);
   // const [nameAbbreviation, setNameAbbreviation] = useState("");
 
   const getMessageData = async () => {
@@ -64,12 +64,36 @@ const Body = () => {
       socket.emit("join_room", selectedChatId);
       console.log(userUsername + " entered " + selectedChat);
       getMessageData();
+      setMessageReceived([]);
     }
   };
 
-  const sendMessage = () => {
-    console.log(message);
-    socket.emit("send_message", { message, selectedChatId });
+  const sendMessage = async () => {
+    console.log(messageTyped);
+    const messageToPost = {
+      chatId: selectedChatId,
+      userId: userId,
+      text: messageTyped,
+      date: new Date(),
+      is_edited: "FALSE",
+    };
+
+    const accessToken = await getAccessTokenSilently({});
+    await axios.post(`${BACKEND_URL}/messages/`, messageToPost, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const abbreviatedName = userFirstName.charAt(0) + userLastName.charAt(0);
+    const messageToEmit = {
+      chatId: selectedChatId,
+      userId: userId,
+      text: messageTyped,
+      date: new Date(),
+      is_edited: "FALSE",
+      abbreviatedName: abbreviatedName,
+      username: userUsername,
+    };
+    await socket.emit("send_message", messageToEmit);
   };
 
   useEffect(() => {
@@ -79,7 +103,8 @@ const Body = () => {
   useEffect(() => {
     console.log("socketon");
     socket.on("receive_message", (data) => {
-      setMessageReceived(data.message);
+      console.log(data);
+      setMessageReceived((message) => [...message, data]);
     });
   }, [socket]);
 
@@ -96,18 +121,25 @@ const Body = () => {
           />
         </div>
       ))}
+      {messageReceived?.map((messageItem, index) => (
+        <div key={index}>
+          <Message
+            date={messageItem.date}
+            text={messageItem.text}
+            abbreviatedName={messageItem.abbreviatedName}
+            username={messageItem.username}
+          />
+        </div>
+      ))}
       <div>
-        {/* <div> tes {messageReceived}</div> */}
-
         <input
           placeholder="Message..."
           onChange={(event) => {
-            setMessage(event.target.value);
+            setMessageTyped(event.target.value);
           }}
         />
 
         <button onClick={sendMessage}> Send Message</button>
-        {messageReceived}
       </div>
     </div>
   );
