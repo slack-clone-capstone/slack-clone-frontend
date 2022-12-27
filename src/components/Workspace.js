@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { createPath, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useUserContext } from "../context/userContext";
 import { useWorkspaceContext } from "../context/workspaceContext";
 import axios from "axios";
@@ -24,7 +24,14 @@ const style = {
 const Workspace = () => {
   const navigate = useNavigate();
   const { user, getAccessTokenSilently, logout } = useAuth0();
-  const { userId, setUserId } = useUserContext();
+  const {
+    userId,
+    setUserId,
+    setUserFirstName,
+    setUserLastName,
+    setUserEmail,
+    setUsername,
+  } = useUserContext();
   const { setWorkspaceId, setSelectedWorkspace } = useWorkspaceContext();
   const [workspace, setWorkspace] = useState();
   const [workspaceNumUsers, setWorkspaceNumUsers] = useState();
@@ -48,6 +55,10 @@ const Workspace = () => {
     );
     setUserId(response.data.id);
     console.log("Backend user data updated.");
+    setUserFirstName(user.given_name);
+    setUserLastName(user.family_name);
+    setUserEmail(user.email);
+    setUsername(user.name);
   };
 
   const getWorkspaceData = async () => {
@@ -63,7 +74,6 @@ const Workspace = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
     );
-    setWorkspace(response.data);
 
     const responseNumArr = [];
 

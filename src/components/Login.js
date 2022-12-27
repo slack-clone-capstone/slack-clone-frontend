@@ -7,7 +7,14 @@ import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { userId, setUserId } = useUserContext();
+  const {
+    userId,
+    setUserId,
+    setUserFirstName,
+    setUserLastName,
+    setUserEmail,
+    setUsername,
+  } = useUserContext();
   const {
     user,
     loginWithRedirect,
@@ -44,6 +51,10 @@ const Login = () => {
 
     setUserId(response.data.id);
     console.log("Backend user data updated.");
+    setUserFirstName(user.given_name);
+    setUserLastName(user.family_name);
+    setUserEmail(user.email);
+    setUsername(user.name);
     navigate("/workspace");
   };
 

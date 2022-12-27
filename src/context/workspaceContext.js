@@ -8,7 +8,7 @@ const WorkspaceContextProvider = ({ children }) => {
   const [workspaceId, setWorkspaceId] = useState();
   const [selectedWorkspace, setSelectedWorkspace] = useState();
   const [selectedChat, setSelectedChat] = useState("");
-  const [selectedChatId, setSelectedChatId] = useState();
+  const [selectedChatId, setSelectedChatId] = useState("");
   const value = {
     workspaceId,
     setWorkspaceId,

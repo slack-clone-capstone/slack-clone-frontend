@@ -27,7 +27,7 @@ const Sidebar = () => {
     });
     setChats(response.data);
 
-    console.log("chats retrieved for " + user.given_name);
+    console.log("Chats retrieved for " + user.given_name);
 
     const chatsListArr = [];
 
