@@ -172,3 +172,32 @@
   cursor: pointer;
   outline: inherit;
 }
+
+.Login {
+  background-color: #4a154b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: whitesmoke;
+  height: 100vh;
+  padding-top: 5vh;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.Login-login-button {
+  color: #4a154b;
+  background-color: whitesmoke;
+  border-color: #4a154b;
+  font-weight: normal;
+  font-size: 20px;
+  border-radius: 2px;
+  border-width: 0.75px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.Login-logo-resize {
+  width: 200px;
+  height: auto;
+}
