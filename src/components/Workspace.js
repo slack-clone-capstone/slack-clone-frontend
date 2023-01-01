@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router";
+import { useNavigate, Navigate } from "react-router";
 import { useUserContext } from "../context/userContext";
 import { useWorkspaceContext } from "../context/workspaceContext";
 import axios from "axios";
@@ -32,12 +32,17 @@ const Workspace = () => {
     setUserEmail,
     setUsername,
   } = useUserContext();
-  const { setWorkspaceId, setSelectedWorkspace } = useWorkspaceContext();
+  const { setWorkspaceId, setSelectedWorkspace, workspaceId } =
+    useWorkspaceContext();
   const [workspace, setWorkspace] = useState();
   const [workspaceNumUsers, setWorkspaceNumUsers] = useState();
   const [workspaceList, setWorkspaceList] = useState();
   const [open, setOpen] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
+
+  // if (userId && workspaceId) {
+  //   return <Navigate to="/" />;
+  // }
 
   // const postUserBackend = async () => {
   //   const accessToken = await getAccessTokenSilently({});
@@ -106,7 +111,9 @@ const Workspace = () => {
   useEffect(() => {
     // To implement if refactor Login.js. However, current method does update backend on the user's data.
     // postUserBackend();
-    if (userId) {
+    if (userId && workspaceId) {
+      navigate("/");
+    } else {
       getWorkspaceData();
     }
   }, []);
