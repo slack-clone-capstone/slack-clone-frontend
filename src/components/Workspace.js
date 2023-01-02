@@ -8,17 +8,18 @@ import { BACKEND_URL } from "./constants";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { fontWeight } from "@mui/system";
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+  // position: "absolute",
+  // top: "50%",
+  // left: "50%",
+  // transform: "translate(-50%, -50%)",
+  // width: 400,
+  // bgcolor: "background.paper",
+  // border: "2px solid #000",
+  // boxShadow: 24,
+  // p: 4,
 };
 
 const Workspace = () => {
@@ -137,34 +138,25 @@ const Workspace = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <div>Welcome Back</div>
-      <div className="row">
-        <button onClick={handleClickLogout}>Logout</button>
-        <div>Workspaces for {user.email}</div>
+    <div className="Workspace">
+      <div className="Workspace-welcome-message">👋 Welcome Back</div>
+      {/* <div className="Workspace-both-list"> */}
+      <div className="Workspace-list row">
+        <div className="Workspace-username">Workspaces for {user.email}</div>
         <>
           {workspaceList?.map((workspace, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-              }}
-            >
+            <div key={index} className="Workspace-workspaces-list">
               <div>
-                <div>{workspace.name}</div>
-                <div>{workspace.userCount} members</div>
+                <div style={{ fontWeight: "bold" }}>{workspace.name}</div>
+                <div style={{ fontStyle: "italic", fontSize: "12px" }}>
+                  {workspace.userCount} members
+                </div>
               </div>
               <button
                 onClick={handleClick}
                 id={workspace.id}
                 name={workspace.name}
+                className="Workspace-launch-slack-button"
               >
                 Launch Slack
               </button>
@@ -172,7 +164,23 @@ const Workspace = () => {
           ))}
         </>
       </div>
-      <button onClick={createNewWorkspace}>Create a new Workspace</button>
+      <div className="Workspace-new-workspace-row">
+        <div>Want to use Slack with a different team?</div>
+        <button
+          className="Workspace-create-workspace-button"
+          onClick={createNewWorkspace}
+        >
+          Create a new Workspace
+        </button>
+      </div>
+      <div style={{ display: "flex", marginTop: "10px" }}>
+        <div>Not seeing your workspace?</div>
+        <button className="Workspace-logout-button" onClick={handleClickLogout}>
+          Try using a different email →
+        </button>
+      </div>
+
+      {/* </div> */}
       <Modal
         open={open}
         onClose={handleClose}
