@@ -67,7 +67,6 @@ const Sidebar = () => {
       chatItem["channelDescription"] = response.data[i].channel_description;
       chatItem["channelPrivate"] = response.data[i].channel_private;
       chatsListArr.push(chatItem);
-      console.log(chatItem);
     }
 
     setChatsList(chatsListArr);
@@ -79,7 +78,7 @@ const Sidebar = () => {
     const response = await axios.post(
       `${BACKEND_URL}/chats/`,
       {
-        userId: userId,
+        userId: 1,
         workspaceId: workspaceId,
         type: "channel",
         channelName: newChannelName,
@@ -104,7 +103,7 @@ const Sidebar = () => {
     if (userId) {
       getChats();
     }
-  }, []);
+  }, [open]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
