@@ -42,8 +42,6 @@ const Sidebar = () => {
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
 
-  console.log(userId, workspaceId);
-
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
       audience: process.env.REACT_APP_AUDIENCE,
@@ -77,12 +75,10 @@ const Sidebar = () => {
 
   const createNewChat = async () => {
     const accessToken = await getAccessTokenSilently({});
-    console.log("testa");
 
-    const response = await axios.post(`${BACKEND_URL}/chats/`, {
-      // for testing purposes, userId = 1
-      // params: { userId: userId, workspaceId: workspaceId },
-      params: {
+    const response = await axios.post(
+      `${BACKEND_URL}/chats/`,
+      {
         userId: userId,
         workspaceId: workspaceId,
         type: "channel",
@@ -90,14 +86,18 @@ const Sidebar = () => {
         channelDescription: newChannelDescription,
         channelPrivate: newChannelPrivate,
       },
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+      // for testing purposes, userId = 1
+      // params: { userId: userId, workspaceId: workspaceId },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
     console.log(`${newChannelName} created`);
 
-    // setNewChannelName("");
-    // setNewChannelDescription("");
-    // setNewChannelPrivate(false);
-    // setOpen(false);
+    setNewChannelName("");
+    setNewChannelDescription("");
+    setNewChannelPrivate(false);
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -124,8 +124,7 @@ const Sidebar = () => {
   };
 
   const submitNewChannel = (e) => {
-    e.preventdefault();
-    console.log("324325");
+    e.preventDefault();
     createNewChat();
   };
 
