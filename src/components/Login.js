@@ -4,7 +4,11 @@ import { UserContextProvider, useUserContext } from "../context/userContext";
 import { useNavigate } from "react-router";
 import { BACKEND_URL } from "./constants";
 import axios from "axios";
+<<<<<<< HEAD
 import { useWorkspaceContext } from "../context/workspaceContext";
+=======
+import slackLogo from "../slack-logo.png";
+>>>>>>> main
 
 const Login = () => {
   const navigate = useNavigate();
@@ -79,8 +83,24 @@ const Login = () => {
 
   return (
     <>
+      {/* to remove logout button once app is done */}
       <button onClick={handleClickLogout}>Logout</button>
-      <button onClick={handleClickLogin}>Login</button>
+      <div className="Login">
+        <img src={slackLogo} className="Login-logo-resize"></img>
+        <button className="Login-login-button" onClick={handleClickLogin}>
+          Sign In
+        </button>
+        <div
+          style={{
+            fontSize: "10px",
+            fontStyle: "italic",
+            fontWeight: "normal",
+          }}
+        >
+          This application is a clone of the original Slack application for
+          learning purposes.
+        </div>
+      </div>
     </>
   );
 };
