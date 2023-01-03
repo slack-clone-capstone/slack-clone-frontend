@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useUserContext } from "../context/userContext";
+import { UserContextProvider, useUserContext } from "../context/userContext";
 import { useNavigate } from "react-router";
 import { BACKEND_URL } from "./constants";
 import axios from "axios";
+<<<<<<< HEAD
+import { useWorkspaceContext } from "../context/workspaceContext";
+=======
 import slackLogo from "../slack-logo.png";
+>>>>>>> main
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,6 +18,7 @@ const Login = () => {
     setUserLastName,
     setUserEmail,
     setUsername,
+    userId,
   } = useUserContext();
   const {
     user,
@@ -24,7 +29,9 @@ const Login = () => {
     logout,
     isLoading,
   } = useAuth0();
+  const { workspaceId } = useWorkspaceContext();
 
+  console.log(userId, workspaceId);
   // ?to implement refactoring on calling of the user info: https://github.com/auth0/auth0-react/issues/145
   // interestingly, this current method still enables user's data (e.g. given_name etc) to be passed to backend despite error being console.log.
   useEffect(() => {

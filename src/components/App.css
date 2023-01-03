@@ -1,8 +1,11 @@
 .Header {
   background-color: rgb(18, 16, 22);
   border-color: rgba(45, 47, 52, 1);
-  border-width: 2px;
+  border-width: 1px;
   border-style: solid;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 .Home-content {
@@ -10,24 +13,57 @@
 }
 
 .Sidebar-content {
-  flex: 20%;
+  width: 20%;
   max-width: 280px;
+  width: 22%;
   min-width: 120px;
   background-color: rgb(18, 16, 22);
   border-color: rgba(45, 47, 52, 1);
+  height: 100vh;
+  color: white;
+}
+
+.Sidebar-workspace {
+  position: fixed;
+  max-width: 280px;
+  width: 20%;
+  min-width: 120px;
+  top: 24px;
+  height: 50px;
+  line-height: 50px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-color: rgba(45, 47, 52, 1);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.Sidebar-chats {
+  position: fixed;
+  min-height: 100vh;
+  top: 76px;
+  overflow-y: scroll;
 }
 
 .Body-content {
   background-color: rgb(18, 16, 22);
   color: white;
+  width: 80%;
 }
 
 .Body-channel-header {
+  position: fixed;
+  width: 80%;
+  top: 24px;
+  height: 50px;
+  line-height: 50px;
   border-color: rgba(45, 47, 52, 1);
-  border-width: 2px;
+  border-width: 1px;
   border-style: solid;
   margin: 0;
   font-size: 18px;
+  left: 20%;
 }
 
 .Message {
@@ -64,6 +100,29 @@
   margin: 2px;
 }
 
+<<<<<<< HEAD
+.Body-message {
+  position: fixed;
+  min-height: 100vh;
+  top: 76px;
+  overflow-y: scroll;
+  overflow-x: auto;
+  bottom: 0;
+  width: 80%;
+  text-align: center;
+  left: 20%;
+  bottom: 0;
+  margin: 0;
+  border-color: rgba(45, 47, 52, 1);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.Message-input-box {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+=======
 .Workspace {
   background-color: #4a154b;
   display: flex;
@@ -200,4 +259,5 @@
 .Login-logo-resize {
   width: 200px;
   height: auto;
+>>>>>>> main
 }

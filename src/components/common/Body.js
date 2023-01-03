@@ -111,27 +111,29 @@ const Body = () => {
   return (
     <div className="Body-content">
       <h2 className="Body-channel-header">{selectedChat}</h2>
-      {messagesList?.map((messageItem, index) => (
-        <div key={index}>
-          <Message
-            date={messageItem.date}
-            text={messageItem.text}
-            abbreviatedName={messageItem.abbreviatedName}
-            username={messageItem.username}
-          />
-        </div>
-      ))}
-      {messageReceived?.map((messageItem, index) => (
-        <div key={index}>
-          <Message
-            date={messageItem.date}
-            text={messageItem.text}
-            abbreviatedName={messageItem.abbreviatedName}
-            username={messageItem.username}
-          />
-        </div>
-      ))}
-      <div>
+      <div className="Body-message">
+        {messagesList?.map((messageItem, index) => (
+          <div key={index}>
+            <Message
+              date={messageItem.date}
+              text={messageItem.text}
+              abbreviatedName={messageItem.abbreviatedName}
+              username={messageItem.username}
+            />
+          </div>
+        ))}
+        {messageReceived?.map((messageItem, index) => (
+          <div key={index}>
+            <Message
+              date={messageItem.date}
+              text={messageItem.text}
+              abbreviatedName={messageItem.abbreviatedName}
+              username={messageItem.username}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="Message-input-box">
         <input
           placeholder="Message..."
           onChange={(event) => {
