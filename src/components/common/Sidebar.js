@@ -8,6 +8,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 // to truncate workspace name if it gets too long.
 // function truncateString(str, num) {
@@ -37,10 +40,11 @@ const Sidebar = () => {
     useWorkspaceContext();
   const [chats, setChats] = useState();
   const [chatsList, setChatsList] = useState();
-  const [open, setOpen] = useState(false);
+  const [channelOpen, setChannelOpen] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
+  const [dMOpen, setDMOpen] = useState(false);
 
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
@@ -96,14 +100,14 @@ const Sidebar = () => {
     setNewChannelName("");
     setNewChannelDescription("");
     setNewChannelPrivate(false);
-    setOpen(false);
+    setChannelOpen(false);
   };
 
   useEffect(() => {
     if (userId) {
       getChats();
     }
-  }, [open]);
+  }, [channelOpen]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
@@ -111,11 +115,11 @@ const Sidebar = () => {
   };
 
   const newChannelModal = () => {
-    setOpen(true);
+    setChannelOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setChannelOpen(false);
   };
 
   const editChannelPrivate = () => {
@@ -125,6 +129,23 @@ const Sidebar = () => {
   const submitNewChannel = (e) => {
     e.preventDefault();
     createNewChat();
+  };
+
+  const newDMModal = () => {
+    setDMOpen(true);
+  };
+
+  const handleDMClose = () => {
+    setDMOpen(false);
+  };
+
+  // const editChannelPrivate = () => {
+  //   setNewChannelPrivate(!newChannelPrivate);
+  // };
+
+  const submitNewDM = (e) => {
+    e.preventDefault();
+    // createNewDM();
   };
 
   return (
@@ -150,7 +171,7 @@ const Sidebar = () => {
         )}
         <button onClick={newChannelModal}>Add channels</button>
         <Modal
-          open={open}
+          open={channelOpen}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -206,6 +227,39 @@ const Sidebar = () => {
               </div>
             )
         )}
+        <button onClick={newDMModal}>New conversation</button>
+        <Modal
+          open={dMOpen}
+          onClose={handleDMClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography variant="h6" component="h2">
+              Add users to direct message:
+            </Typography>
+            <form onSubmit={submitNewDM}>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked />}
+                  label="Label"
+                />
+                <FormControlLabel
+                  disabled
+                  control={<Checkbox />}
+                  label="Disabled"
+                />
+                <Checkbox
+                  // checked={checked}
+                  // onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </FormGroup>
+              <br />
+              <input type="submit" value="New conversation" />
+            </form>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
