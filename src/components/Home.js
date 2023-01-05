@@ -23,7 +23,7 @@ const Home = () => {
         </div>
         <div className="Body">
           <div className="Home-header">{selectedChat}</div>
-          <Body className="scrollbar" />
+          <Body />
         </div>
       </div>
     </div>

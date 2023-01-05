@@ -8,6 +8,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Switch from "@mui/material/Switch";
+import LockIcon from "@mui/icons-material/Lock";
+import Grid3x3Icon from "@mui/icons-material/Grid3x3";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 // to truncate workspace name if it gets too long.
 // function truncateString(str, num) {
@@ -41,6 +45,7 @@ const Sidebar = () => {
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
+  const [channelCollapsed, setChannelCollapsed] = useState(true);
 
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
@@ -127,14 +132,27 @@ const Sidebar = () => {
     createNewChat();
   };
 
+  const handleChannelCollapseClick = (e) => {
+    setChannelCollapsed(!channelCollapsed);
+    console.log(channelCollapsed);
+  };
+
   return (
     <div className="Sidebar-content">
       {/* to integrate with MUI for user to toggle to other workspaces:
       https://mui.com/material-ui/react-select/#native-select */}
 
       <div className="Sidebar-chats">
-        <div className="Sidebar-channel">
-          <div>Channels</div>
+        <div className="Sidebar-chat-header">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <button
+              onClick={handleChannelCollapseClick}
+              className="button button-hover"
+            >
+              {channelCollapsed ? <ArrowRightIcon /> : <ArrowDropDownIcon />}
+            </button>
+            <div>Channels</div>
+          </div>
           <div>
             <Modal
               open={open}
@@ -178,27 +196,44 @@ const Sidebar = () => {
                 </form>
               </Box>
             </Modal>
-            <button onClick={newChannelModal}>+</button>
+            <button
+              className="Sidebar-new-chat button button-hover"
+              onClick={newChannelModal}
+              style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem" }}
+            >
+              +
+            </button>
           </div>
         </div>
-        {chatsList?.map(
-          (chat, index) =>
-            chat.type === "channel" && (
-              <div key={index} style={{}}>
-                <button
-                  className="Sidebar-chat-item"
-                  onClick={handleClick}
-                  id={chat.id}
-                  name={chat.channelName}
-                >
-                  <div>+</div>
-                  <div>{chat.channelName}</div>
-                </button>
-              </div>
-            )
-        )}
+        <div style={{ display: channelCollapsed ? "none" : "block" }}>
+          {chatsList?.map(
+            (chat, index) =>
+              chat.type === "channel" && (
+                <div key={index} style={{}}>
+                  <button
+                    className="Sidebar-chat-item"
+                    onClick={handleClick}
+                    id={chat.id}
+                    name={chat.channelName}
+                  >
+                    <div style={{ paddingRight: "0.5rem" }}>
+                      {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
+                    </div>
+                    <div>{chat.channelName}</div>
+                  </button>
+                </div>
+              )
+          )}
+        </div>
 
-        <div>Direct Messages</div>
+        <div className="Sidebar-chat-header">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <button>
+              <ArrowDropDownIcon />
+            </button>
+            <div>Direct Messages</div>
+          </div>
+        </div>
         {chatsList?.map(
           (chat, index) =>
             chat.type === "direct message" && (

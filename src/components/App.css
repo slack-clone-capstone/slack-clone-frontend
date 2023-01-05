@@ -14,7 +14,6 @@
   width: 100%;
   height: 100vh;
   top: 4vh;
-  /* flex: 1 4 auto; */
 }
 
 .Home-header {
@@ -24,6 +23,11 @@
   position: sticky;
   padding: 1rem;
   color: white;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  min-height: 1.5rem;
 }
 
 .Sidebar {
@@ -38,12 +42,12 @@
 }
 
 .Sidebar-content {
-  width: 100%;
+  margin-left: 1rem;
 }
 
 .Sidebar-chats {
   overflow-y: scroll;
-  height: 100vh;
+  height: 89vh;
 }
 
 .Sidebar-chat-item {
@@ -57,13 +61,32 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  padding: 0.1rem;
 }
+
 .Sidebar-chat-item:hover {
   background-color: rgb(65, 65, 70);
 }
 
-.Sidebar-channel {
+.Sidebar-chat-header {
+  padding-top: 0.75rem;
+  padding-bottom: 0.25rem;
+  padding-right: 1rem;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.Sidebar-new-chat {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  font-size: 1.5rem;
 }
 
 .Body {
@@ -114,7 +137,7 @@
 
 .Body-message {
   overflow-y: scroll;
-  height: 61vh;
+  height: 71vh;
 }
 
 .Message-input-box {
@@ -122,7 +145,7 @@
   bottom: 0;
   display: flex;
   border: 1px solid rgb(106, 109, 119);
-  background-color: rgb(103, 106, 113);
+  background-color: rgb(23, 23, 25);
   border-radius: 1vh;
   width: 100%;
   display: flex;
@@ -133,7 +156,7 @@
 }
 
 .Message-input {
-  height: 10rem;
+  height: 7.5rem;
   width: 60%;
 }
 
@@ -273,4 +296,28 @@
 .Login-logo-resize {
   width: 200px;
   height: auto;
+}
+
+.button {
+  background-color: rgb(23, 23, 25);
+  color: white;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  border: none;
+}
+
+.button-hover:hover {
+  background-color: rgb(65, 65, 70);
+  border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar {
+  background-color: rgb(23, 23, 25);
+  width: 8px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(86, 86, 94);
+  border-radius: 10rem;
 }

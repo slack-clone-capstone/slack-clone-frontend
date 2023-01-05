@@ -6,6 +6,7 @@ import Message from "./Message";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
 import io from "socket.io-client";
+import SendIcon from "@mui/icons-material/Send";
 
 const socket = io.connect("http://localhost:3002", {
   transports: ["websocket"],
@@ -132,14 +133,17 @@ const Body = () => {
           </div>
         ))}
         <div className="Message-input-box">
-          <input
+          <textarea
+            type="input"
             className="Message-input"
             placeholder="Message..."
             onChange={(event) => {
               setMessageTyped(event.target.value);
             }}
           />
-          <button onClick={sendMessage}> Send Message</button>
+          <button onClick={sendMessage}>
+            <SendIcon />
+          </button>
         </div>
       </div>
     </div>
