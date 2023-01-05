@@ -110,7 +110,6 @@ const Body = () => {
 
   return (
     <div className="Body-content">
-      <h2 className="Body-channel-header">{selectedChat}</h2>
       <div className="Body-message">
         {messagesList?.map((messageItem, index) => (
           <div key={index}>
@@ -132,16 +131,16 @@ const Body = () => {
             />
           </div>
         ))}
-      </div>
-      <div className="Message-input-box">
-        <input
-          placeholder="Message..."
-          onChange={(event) => {
-            setMessageTyped(event.target.value);
-          }}
-        />
-
-        <button onClick={sendMessage}> Send Message</button>
+        <div className="Message-input-box">
+          <input
+            className="Message-input"
+            placeholder="Message..."
+            onChange={(event) => {
+              setMessageTyped(event.target.value);
+            }}
+          />
+          <button onClick={sendMessage}> Send Message</button>
+        </div>
       </div>
     </div>
   );

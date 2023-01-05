@@ -10,14 +10,21 @@ import { BACKEND_URL } from "./constants";
 
 const Home = () => {
   const { userId, setUserId } = useUserContext();
-  const { workspaceId, setWorkspaceId } = useWorkspaceContext();
+  const { workspaceId, setWorkspaceId, selectedWorkspace, selectedChat } =
+    useWorkspaceContext();
 
   return (
     <div>
       <Header setUserId={setUserId} setWorkspaceId={setWorkspaceId} />
       <div className="Home-content">
-        <Sidebar className="Sidebar-content" />
-        <Body className="Body-content" />
+        <div className="Sidebar">
+          <div className="Home-header">{selectedWorkspace}</div>
+          <Sidebar />
+        </div>
+        <div className="Body">
+          <div className="Home-header">{selectedChat}</div>
+          <Body className="scrollbar" />
+        </div>
       </div>
     </div>
   );

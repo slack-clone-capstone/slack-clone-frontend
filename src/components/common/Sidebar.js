@@ -131,66 +131,73 @@ const Sidebar = () => {
     <div className="Sidebar-content">
       {/* to integrate with MUI for user to toggle to other workspaces:
       https://mui.com/material-ui/react-select/#native-select */}
-      <div className="Sidebar-workspace">{selectedWorkspace}</div>
+
       <div className="Sidebar-chats">
-        <div>Channels</div>
+        <div className="Sidebar-channel">
+          <div>Channels</div>
+          <div>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <Typography variant="h6" component="h2">
+                  Create a channel
+                </Typography>
+                <form onSubmit={submitNewChannel}>
+                  <label>
+                    <Typography sx={{ mt: 2 }}>New channel name:</Typography>
+                    <input
+                      name="channel-name"
+                      type="text"
+                      value={newChannelName}
+                      onChange={(e) => setNewChannelName(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <Typography sx={{ mt: 2 }}>Description:</Typography>
+                    <input
+                      name="channel-description"
+                      type="text"
+                      value={newChannelDescription}
+                      onChange={(e) => setNewChannelDescription(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <Typography sx={{ mt: 2 }}>Make private?</Typography>
+                    <Switch
+                      checked={newChannelPrivate}
+                      onChange={editChannelPrivate}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  </label>
+                  <br />
+                  <input type="submit" value="Create channel" />
+                </form>
+              </Box>
+            </Modal>
+            <button onClick={newChannelModal}>+</button>
+          </div>
+        </div>
         {chatsList?.map(
           (chat, index) =>
             chat.type === "channel" && (
               <div key={index} style={{}}>
                 <button
+                  className="Sidebar-chat-item"
                   onClick={handleClick}
                   id={chat.id}
                   name={chat.channelName}
                 >
-                  {chat.channelName}
+                  <div>+</div>
+                  <div>{chat.channelName}</div>
                 </button>
               </div>
             )
         )}
-        <button onClick={newChannelModal}>Add channels</button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography variant="h6" component="h2">
-              Create a channel
-            </Typography>
-            <form onSubmit={submitNewChannel}>
-              <label>
-                <Typography sx={{ mt: 2 }}>New channel name:</Typography>
-                <input
-                  name="channel-name"
-                  type="text"
-                  value={newChannelName}
-                  onChange={(e) => setNewChannelName(e.target.value)}
-                />
-              </label>
-              <label>
-                <Typography sx={{ mt: 2 }}>Description:</Typography>
-                <input
-                  name="channel-description"
-                  type="text"
-                  value={newChannelDescription}
-                  onChange={(e) => setNewChannelDescription(e.target.value)}
-                />
-              </label>
-              <label>
-                <Typography sx={{ mt: 2 }}>Make private?</Typography>
-                <Switch
-                  checked={newChannelPrivate}
-                  onChange={editChannelPrivate}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
-              </label>
-              <br />
-              <input type="submit" value="Create channel" />
-            </form>
-          </Box>
-        </Modal>
+
         <div>Direct Messages</div>
         {chatsList?.map(
           (chat, index) =>
