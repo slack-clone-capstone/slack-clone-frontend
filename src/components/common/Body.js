@@ -174,7 +174,7 @@ const Body = () => {
               setMessageTyped(event.target.value);
             }}
           />
-          <button onClick={sendMessage}>
+          <button className="button2 button-hover" onClick={sendMessage}>
             <SendIcon />
           </button>
         </div>
