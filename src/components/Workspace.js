@@ -33,8 +33,13 @@ const Workspace = () => {
     setUserEmail,
     setUsername,
   } = useUserContext();
-  const { setWorkspaceId, setSelectedWorkspace, workspaceId } =
-    useWorkspaceContext();
+  const {
+    setWorkspaceId,
+    setSelectedWorkspace,
+    workspaceId,
+    usersList,
+    setUsersList,
+  } = useWorkspaceContext();
   const [workspace, setWorkspace] = useState();
   const [workspaceNumUsers, setWorkspaceNumUsers] = useState();
   const [workspaceList, setWorkspaceList] = useState();
@@ -109,6 +114,34 @@ const Workspace = () => {
     setWorkspaceList(workspaceListArr);
   };
 
+  const getUsers = async () => {
+    const accessToken = await getAccessTokenSilently({
+      audience: process.env.REACT_APP_AUDIENCE,
+      scope: process.env.REACT_APP_SCOPE,
+    });
+
+    const response = await axios.get(`${BACKEND_URL}/users/`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    console.log("All users data retrieved");
+
+    const usersListArr = [];
+
+    for (let i = 0; i < response.data.length; i += 1) {
+      console.log(response.data[i].first_name);
+      if (response.data[i].id != userId) {
+        const userItem = {};
+        userItem["id"] = response.data[i].id;
+        userItem["firstName"] = response.data[i].first_name;
+        userItem["lastName"] = response.data[i].last_name;
+        userItem["email"] = response.data[i].email;
+        userItem["username"] = response.data[i].username;
+        usersListArr.push(userItem);
+      }
+    }
+    setUsersList(usersListArr);
+  };
+
   useEffect(() => {
     // To implement if refactor Login.js. However, current method does update backend on the user's data.
     // postUserBackend();
@@ -122,6 +155,7 @@ const Workspace = () => {
   const handleClick = (e) => {
     setWorkspaceId(e.target.id);
     setSelectedWorkspace(e.target.name);
+    getUsers();
     navigate("/");
   };
 

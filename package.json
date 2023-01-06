@@ -5,6 +5,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^1.12.0",
     "@auth0/auth0-spa-js": "^2.0.1",
+    "@babel/parser": "^7.20.7",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",

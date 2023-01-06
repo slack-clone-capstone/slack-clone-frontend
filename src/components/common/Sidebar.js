@@ -8,6 +8,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 // to truncate workspace name if it gets too long.
 // function truncateString(str, num) {
@@ -33,14 +36,21 @@ const style = {
 const Sidebar = () => {
   const { user, getAccessTokenSilently } = useAuth0();
   const { userId } = useUserContext();
-  const { workspaceId, selectedWorkspace, setSelectedChat, setSelectedChatId } =
-    useWorkspaceContext();
+  const {
+    workspaceId,
+    selectedWorkspace,
+    setSelectedChat,
+    setSelectedChatId,
+    usersList,
+  } = useWorkspaceContext();
   const [chats, setChats] = useState();
   const [chatsList, setChatsList] = useState();
-  const [open, setOpen] = useState(false);
+  const [channelOpen, setChannelOpen] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
+  const [dMOpen, setDMOpen] = useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
 
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
@@ -51,7 +61,7 @@ const Sidebar = () => {
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
-      params: { userId: 1, workspaceId: workspaceId },
+      params: { userId: 4, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setChats(response.data);
@@ -84,6 +94,7 @@ const Sidebar = () => {
         channelName: newChannelName,
         channelDescription: newChannelDescription,
         channelPrivate: newChannelPrivate,
+        othersUserId: null,
       },
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
@@ -96,14 +107,14 @@ const Sidebar = () => {
     setNewChannelName("");
     setNewChannelDescription("");
     setNewChannelPrivate(false);
-    setOpen(false);
+    setChannelOpen(false);
   };
 
   useEffect(() => {
     if (userId) {
       getChats();
     }
-  }, [open]);
+  }, [channelOpen, dMOpen]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
@@ -111,11 +122,11 @@ const Sidebar = () => {
   };
 
   const newChannelModal = () => {
-    setOpen(true);
+    setChannelOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setChannelOpen(false);
   };
 
   const editChannelPrivate = () => {
@@ -125,6 +136,66 @@ const Sidebar = () => {
   const submitNewChannel = (e) => {
     e.preventDefault();
     createNewChat();
+  };
+
+  const createNewDM = async () => {
+    const accessToken = await getAccessTokenSilently({});
+
+    const response = await axios.post(
+      `${BACKEND_URL}/chats/`,
+      {
+        userId: 1,
+        workspaceId: workspaceId,
+        type: "direct message",
+        channelName: null,
+        channelDescription: null,
+        channelPrivate: null,
+        othersUserId: selectedUserIds,
+      },
+      // for testing purposes, userId = 1
+      // params: { userId: userId, workspaceId: workspaceId },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+    console.log("Direct message created");
+
+    setSelectedUserIds([]);
+    setDMOpen(false);
+  };
+
+  const newDMModal = () => {
+    setDMOpen(true);
+    setSelectedUserIds([]);
+  };
+
+  const updateChecks = (e) => {
+    if (e.target.checked === true && !selectedUserIds.includes(+e.target.id)) {
+      setSelectedUserIds([...selectedUserIds, e.target.id]);
+    }
+    if (e.target.checked === false && selectedUserIds.includes(+e.target.id)) {
+      let cloneSelectedUserIds = [...selectedUserIds];
+      let indexForDeletion = selectedUserIds.indexOf(+e.target.id);
+      if (indexForDeletion === 0 && cloneSelectedUserIds.length === 1) {
+        setSelectedUserIds([]);
+      } else {
+        cloneSelectedUserIds.splice(indexForDeletion, 1);
+        setSelectedUserIds(cloneSelectedUserIds);
+      }
+    }
+  };
+
+  const handleDMClose = () => {
+    setDMOpen(false);
+  };
+
+  // const editChannelPrivate = () => {
+  //   setNewChannelPrivate(!newChannelPrivate);
+  // };
+
+  const submitNewDM = (e) => {
+    e.preventDefault();
+    createNewDM();
   };
 
   return (
@@ -150,7 +221,7 @@ const Sidebar = () => {
         )}
         <button onClick={newChannelModal}>Add channels</button>
         <Modal
-          open={open}
+          open={channelOpen}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -206,6 +277,47 @@ const Sidebar = () => {
               </div>
             )
         )}
+        <button onClick={newDMModal}>New conversation</button>
+        <Modal
+          open={dMOpen}
+          onClose={handleDMClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography variant="h6" component="h2">
+              Add users to direct message:
+            </Typography>
+            <form onSubmit={submitNewDM}>
+              <FormGroup>
+                {usersList?.map((userItem, index) => (
+                  <FormControlLabel
+                    // className="twocolelement"
+                    key={index}
+                    control={
+                      <Checkbox
+                        onChange={updateChecks}
+                        index={index}
+                        id={userItem.id.toString()}
+                        inputProps={{ "aria-label": "controlled" }}
+                      />
+                    }
+                    label={
+                      userItem.firstName +
+                      " " +
+                      userItem.lastName +
+                      " " +
+                      userItem.username
+                    }
+                  />
+                ))}
+              </FormGroup>
+
+              <br />
+              <input type="submit" value="New conversation" />
+            </form>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
