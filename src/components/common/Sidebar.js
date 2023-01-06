@@ -388,7 +388,7 @@ const Sidebar = () => {
               chat.type === "direct message" && (
                 <div key={index} style={{}}>
                   <button
-                    // className="Sidebar-chat-item"
+                    className="Sidebar-chat-item Sidebar-overflow"
                     onClick={handleClick}
                     id={chat.id}
                     name={chat.channelName}

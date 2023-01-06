@@ -80,6 +80,17 @@
   background-color: rgb(43, 43, 49);
 }
 
+.Sidebar-overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  min-height: 1.5rem;
+  display: inline-block;
+  text-align: left;
+  padding: 0.4rem;
+}
+
 .Sidebar-chat-header {
   padding-top: 0.75rem;
   padding-bottom: 0.25rem;

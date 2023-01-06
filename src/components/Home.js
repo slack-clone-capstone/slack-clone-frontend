@@ -34,7 +34,7 @@ const Home = () => {
             }}
           >
             <div>{selectedChat}</div>
-            <div> members</div>
+            {/* <div> members</div> */}
           </div>
 
           <Body />
