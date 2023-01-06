@@ -77,7 +77,7 @@ const Workspace = () => {
       audience: process.env.REACT_APP_AUDIENCE,
       scope: process.env.REACT_APP_SCOPE,
     });
-
+    console.log(accessToken);
     const response = await axios.get(
       `${BACKEND_URL}/userWorkspaces/workspaces`,
       {
