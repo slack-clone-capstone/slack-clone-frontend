@@ -28,10 +28,12 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
+  bgcolor: "rgb(31, 31, 34)",
+  color: "whitesmoke",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  borderRadius: "10px",
 };
 
 const Sidebar = () => {
@@ -46,6 +48,7 @@ const Sidebar = () => {
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
   const [channelCollapsed, setChannelCollapsed] = useState(false);
+  const [dmCollapsed, setDmCollapsed] = useState(false);
 
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
@@ -134,7 +137,10 @@ const Sidebar = () => {
 
   const handleChannelCollapseClick = (e) => {
     setChannelCollapsed(!channelCollapsed);
-    console.log(channelCollapsed);
+  };
+
+  const handleDmCollapseClick = (e) => {
+    setDmCollapsed(!dmCollapsed);
   };
 
   return (
@@ -228,26 +234,31 @@ const Sidebar = () => {
 
         <div className="Sidebar-chat-header">
           <div style={{ display: "flex", alignItems: "center" }}>
-            <button>
-              <ArrowDropDownIcon />
+            <button
+              className="button button-hover"
+              onClick={handleDmCollapseClick}
+            >
+              {dmCollapsed ? <ArrowRightIcon /> : <ArrowDropDownIcon />}
             </button>
             <div>Direct Messages</div>
           </div>
         </div>
-        {chatsList?.map(
-          (chat, index) =>
-            chat.type === "direct message" && (
-              <div key={index} style={{}}>
-                <button
-                  onClick={handleClick}
-                  id={chat.id}
-                  name={chat.channelName}
-                >
-                  {chat.channelName}
-                </button>
-              </div>
-            )
-        )}
+        <div style={{ display: dmCollapsed ? "none" : "block" }}>
+          {chatsList?.map(
+            (chat, index) =>
+              chat.type === "direct message" && (
+                <div key={index} style={{}}>
+                  <button
+                    onClick={handleClick}
+                    id={chat.id}
+                    name={chat.channelName}
+                  >
+                    {chat.channelName}
+                  </button>
+                </div>
+              )
+          )}
+        </div>
       </div>
     </div>
   );

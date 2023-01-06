@@ -137,7 +137,6 @@
 }
 
 .Message-no-profile-photo:hover {
-  /* margin: 3px 10px 3px 10px; */
   color: rgb(143, 143, 158);
   width: 100%;
 }
@@ -154,6 +153,7 @@
   margin-right: 10px;
   color: rgb(143, 143, 158);
 }
+
 .Message-profile-time-hide {
   font-size: 12px;
   margin-left: 2px;
@@ -197,8 +197,7 @@
   margin-left: 1.5rem;
   margin-right: 1.5rem;
   padding-left: 3rem;
-  padding-right: 3rem;
-  max-width: inherit;
+  padding-right: 1rem;
 }
 
 .Message-input {
@@ -376,4 +375,9 @@
 ::-webkit-scrollbar-thumb {
   background-color: rgb(86, 86, 94);
   border-radius: 10rem;
+}
+
+.Channel-modal {
+  background-color: darkgrey;
+  /* color: darkgrey; */
 }
