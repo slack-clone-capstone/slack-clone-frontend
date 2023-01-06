@@ -12,6 +12,8 @@ const Home = () => {
   const { userId, setUserId } = useUserContext();
   const { workspaceId, setWorkspaceId, selectedWorkspace, selectedChat } =
     useWorkspaceContext();
+  const [chatUserNum, setChatUserNum] = useState();
+  // getting users in the selected chat
 
   return (
     <div>
@@ -19,10 +21,22 @@ const Home = () => {
       <div className="Home-content">
         <div className="Sidebar">
           <div className="Home-header">{selectedWorkspace}</div>
+
           <Sidebar />
         </div>
         <div className="Body">
-          <div className="Home-header">{selectedChat}</div>
+          <div
+            className="Home-header"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>{selectedChat}</div>
+            {/* <div> members</div> */}
+          </div>
+
           <Body />
         </div>
       </div>

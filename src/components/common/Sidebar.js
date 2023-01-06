@@ -75,6 +75,36 @@ const Sidebar = () => {
       chatItem["channelName"] = response.data[i].channel_name;
       chatItem["channelDescription"] = response.data[i].channel_description;
       chatItem["channelPrivate"] = response.data[i].channel_private;
+
+      // if the chat is a Direct Message
+      if (response.data[i].type === "direct message") {
+        const chatIdToQuery = response.data[i].id;
+        const responseOfUsers = await axios.get(
+          `${BACKEND_URL}/chats/users/${chatIdToQuery}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        let directMessageName = "";
+        for (let j = 0; j < responseOfUsers.data.length; j += 1) {
+          const userIdInfo = responseOfUsers.data[j].userId;
+          const userResponse = await axios.get(
+            `${BACKEND_URL}/users/${userIdInfo}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+          const userNameToDisplay =
+            userResponse.data.first_name + " " + userResponse.data.last_name;
+          if (directMessageName.length === 0) {
+            directMessageName = userNameToDisplay;
+          } else {
+            directMessageName += `, ${userNameToDisplay}`;
+          }
+        }
+        chatItem["usersInDM"] = directMessageName;
+      }
+
       chatsListArr.push(chatItem);
     }
 
@@ -358,12 +388,14 @@ const Sidebar = () => {
               chat.type === "direct message" && (
                 <div key={index} style={{}}>
                   <button
-                    // className="Sidebar-chat-item"
+                    className="Sidebar-chat-item Sidebar-overflow"
                     onClick={handleClick}
                     id={chat.id}
                     name={chat.channelName}
+                    name={chat.usersInDM}
                   >
                     {chat.channelName}
+                    {chat.usersInDM}
                   </button>
                 </div>
               )
