@@ -36,8 +36,13 @@ const style = {
 const Sidebar = () => {
   const { user, getAccessTokenSilently } = useAuth0();
   const { userId } = useUserContext();
-  const { workspaceId, selectedWorkspace, setSelectedChat, setSelectedChatId } =
-    useWorkspaceContext();
+  const {
+    workspaceId,
+    selectedWorkspace,
+    setSelectedChat,
+    setSelectedChatId,
+    usersList,
+  } = useWorkspaceContext();
   const [chats, setChats] = useState();
   const [chatsList, setChatsList] = useState();
   const [channelOpen, setChannelOpen] = useState(false);
@@ -45,6 +50,7 @@ const Sidebar = () => {
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
   const [dMOpen, setDMOpen] = useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
 
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
@@ -55,7 +61,7 @@ const Sidebar = () => {
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
-      params: { userId: 1, workspaceId: workspaceId },
+      params: { userId: 4, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setChats(response.data);
@@ -88,6 +94,7 @@ const Sidebar = () => {
         channelName: newChannelName,
         channelDescription: newChannelDescription,
         channelPrivate: newChannelPrivate,
+        othersUserId: null,
       },
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
@@ -107,7 +114,7 @@ const Sidebar = () => {
     if (userId) {
       getChats();
     }
-  }, [channelOpen]);
+  }, [channelOpen, dMOpen]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
@@ -131,8 +138,51 @@ const Sidebar = () => {
     createNewChat();
   };
 
+  const createNewDM = async () => {
+    const accessToken = await getAccessTokenSilently({});
+
+    const response = await axios.post(
+      `${BACKEND_URL}/chats/`,
+      {
+        userId: 1,
+        workspaceId: workspaceId,
+        type: "direct message",
+        channelName: null,
+        channelDescription: null,
+        channelPrivate: null,
+        othersUserId: selectedUserIds,
+      },
+      // for testing purposes, userId = 1
+      // params: { userId: userId, workspaceId: workspaceId },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+    console.log("Direct message created");
+
+    setSelectedUserIds([]);
+    setDMOpen(false);
+  };
+
   const newDMModal = () => {
     setDMOpen(true);
+    setSelectedUserIds([]);
+  };
+
+  const updateChecks = (e) => {
+    if (e.target.checked === true && !selectedUserIds.includes(+e.target.id)) {
+      setSelectedUserIds([...selectedUserIds, e.target.id]);
+    }
+    if (e.target.checked === false && selectedUserIds.includes(+e.target.id)) {
+      let cloneSelectedUserIds = [...selectedUserIds];
+      let indexForDeletion = selectedUserIds.indexOf(+e.target.id);
+      if (indexForDeletion === 0 && cloneSelectedUserIds.length === 1) {
+        setSelectedUserIds([]);
+      } else {
+        cloneSelectedUserIds.splice(indexForDeletion, 1);
+        setSelectedUserIds(cloneSelectedUserIds);
+      }
+    }
   };
 
   const handleDMClose = () => {
@@ -145,7 +195,7 @@ const Sidebar = () => {
 
   const submitNewDM = (e) => {
     e.preventDefault();
-    // createNewDM();
+    createNewDM();
   };
 
   return (
@@ -240,21 +290,29 @@ const Sidebar = () => {
             </Typography>
             <form onSubmit={submitNewDM}>
               <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Label"
-                />
-                <FormControlLabel
-                  disabled
-                  control={<Checkbox />}
-                  label="Disabled"
-                />
-                <Checkbox
-                  // checked={checked}
-                  // onChange={handleChange}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
+                {usersList?.map((userItem, index) => (
+                  <FormControlLabel
+                    // className="twocolelement"
+                    key={index}
+                    control={
+                      <Checkbox
+                        onChange={updateChecks}
+                        index={index}
+                        id={userItem.id.toString()}
+                        inputProps={{ "aria-label": "controlled" }}
+                      />
+                    }
+                    label={
+                      userItem.firstName +
+                      " " +
+                      userItem.lastName +
+                      " " +
+                      userItem.username
+                    }
+                  />
+                ))}
               </FormGroup>
+
               <br />
               <input type="submit" value="New conversation" />
             </form>
