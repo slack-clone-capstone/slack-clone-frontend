@@ -6,6 +6,7 @@ import Message from "./Message";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
 import io from "socket.io-client";
+import SendIcon from "@mui/icons-material/Send";
 
 const socket = io.connect("http://localhost:3002", {
   transports: ["websocket"],
@@ -21,6 +22,7 @@ const Body = () => {
   const [messagesList, setMessagesList] = useState();
   const [messageTyped, setMessageTyped] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
+  const [sortedMessagesList, setSortedMessagesList] = useState();
   // const [nameAbbreviation, setNameAbbreviation] = useState("");
 
   const getMessageData = async () => {
@@ -56,7 +58,37 @@ const Body = () => {
     }
 
     setMessagesList(messageItemArr);
-    console.log(messagesList[1]);
+    // console.log(messagesList[1]);
+
+    // sorting message data // it is already sorted when pulled out from database
+    let sortedMessageItemArr = [];
+
+    for (let i = 0; i < messageItemArr.length; i += 1) {
+      // different classes - msg-with-date, msg-with-dp, msg-only
+
+      if (i == 0) {
+        messageItemArr[i]["classNameTag"] = "msg-with-date";
+      } else {
+        if (
+          messageItemArr[i].date.split("T")[0] !=
+          messageItemArr[i - 1].date.split("T")[0]
+        ) {
+          messageItemArr[i]["classNameTag"] = "msg-with-date";
+        } else if (
+          messageItemArr[i].date.split("T")[0] ==
+            messageItemArr[i - 1].date.split("T")[0] &&
+          messageItemArr[i].userId != messageItemArr[i - 1].userId
+        ) {
+          messageItemArr[i]["classNameTag"] = "msg-with-dp";
+        } else {
+          messageItemArr[i]["classNameTag"] = "msg-only";
+        }
+      }
+      sortedMessageItemArr.push(messageItemArr[i]);
+    }
+
+    setSortedMessagesList(sortedMessageItemArr);
+    console.log(sortedMessageItemArr);
   };
 
   const joinRoom = () => {
@@ -110,15 +142,15 @@ const Body = () => {
 
   return (
     <div className="Body-content">
-      <h2 className="Body-channel-header">{selectedChat}</h2>
       <div className="Body-message">
-        {messagesList?.map((messageItem, index) => (
+        {sortedMessagesList?.map((messageItem, index) => (
           <div key={index}>
             <Message
               date={messageItem.date}
               text={messageItem.text}
               abbreviatedName={messageItem.abbreviatedName}
               username={messageItem.username}
+              classNameTag={messageItem.classNameTag}
             />
           </div>
         ))}
@@ -129,19 +161,23 @@ const Body = () => {
               text={messageItem.text}
               abbreviatedName={messageItem.abbreviatedName}
               username={messageItem.username}
+              classNameTag="msg-with-dp"
             />
           </div>
         ))}
-      </div>
-      <div className="Message-input-box">
-        <input
-          placeholder="Message..."
-          onChange={(event) => {
-            setMessageTyped(event.target.value);
-          }}
-        />
-
-        <button onClick={sendMessage}> Send Message</button>
+        <div className="Message-input-box">
+          <textarea
+            type="input"
+            className="Message-input"
+            placeholder="Message..."
+            onChange={(event) => {
+              setMessageTyped(event.target.value);
+            }}
+          />
+          <button className="button2 button-hover" onClick={sendMessage}>
+            <SendIcon />
+          </button>
+        </div>
       </div>
     </div>
   );

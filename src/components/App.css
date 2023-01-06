@@ -6,122 +6,207 @@
   position: fixed;
   top: 0;
   width: 100%;
+  height: 4vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.Header-buttons {
+  width: 4rem;
+  background-color: rgb(156, 159, 160);
+  border: 1px solid;
+  border-radius: 0.25rem;
 }
 
 .Home-content {
   display: flex;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 4vh;
+}
+
+.Home-header {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 0.5px solid rgb(106, 109, 119);
+  position: sticky;
+  padding: 1rem;
+  color: white;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  min-height: 1.5rem;
+}
+
+.Sidebar {
+  width: 20%;
+  max-width: 280vh;
+  min-width: 12vh;
+  background-color: #171517;
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  border: 0.5px solid rgb(106, 109, 119);
 }
 
 .Sidebar-content {
-  width: 20%;
-  max-width: 280px;
-  width: 22%;
-  min-width: 120px;
-  background-color: rgb(18, 16, 22);
-  border-color: rgba(45, 47, 52, 1);
-  height: 100vh;
-  color: white;
-}
-
-.Sidebar-workspace {
-  position: fixed;
-  max-width: 280px;
-  width: 20%;
-  min-width: 120px;
-  top: 24px;
-  height: 50px;
-  line-height: 50px;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  border-color: rgba(45, 47, 52, 1);
-  border-width: 1px;
-  border-style: solid;
+  margin-left: 1rem;
 }
 
 .Sidebar-chats {
-  position: fixed;
-  min-height: 100vh;
-  top: 76px;
   overflow-y: scroll;
+  height: 89vh;
 }
 
-.Body-content {
-  background-color: rgb(18, 16, 22);
+.Sidebar-chat-item {
+  background-color: #171517;
   color: white;
-  width: 80%;
+  border: none;
+  padding-left: 5px;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.1rem;
 }
 
-.Body-channel-header {
-  position: fixed;
-  width: 80%;
-  top: 24px;
-  height: 50px;
-  line-height: 50px;
-  border-color: rgba(45, 47, 52, 1);
-  border-width: 1px;
-  border-style: solid;
-  margin: 0;
-  font-size: 18px;
-  left: 20%;
+.Sidebar-chat-item:hover {
+  background-color: rgb(43, 43, 49);
+}
+
+.Sidebar-chat-header {
+  padding-top: 0.75rem;
+  padding-bottom: 0.25rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.Sidebar-new-chat {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  font-size: 1.5rem;
+}
+
+.Body {
+  flex: 1;
+  background-color: rgb(31, 31, 34);
+  border: 0.5px solid rgb(106, 109, 119);
 }
 
 .Message {
-  margin: 5px;
+  margin: 3px;
   display: flex;
   flex-direction: row;
+  color: whitesmoke;
+}
+
+.Message:hover {
+  background-color: rgb(47, 47, 51);
+  color: whitesmoke;
 }
 
 .Message-profile-photo {
   height: 36px;
   line-height: 36px;
   width: 36px;
-  background-color: rgba(30, 75, 63, 1);
+  background-color: rgb(44, 81, 116);
   font-weight: bold;
   text-align: center;
   vertical-align: middle;
-  margin: 3px;
+  margin: 3px 10px 3px 10px;
+  border-radius: 0.3rem;
+}
+
+.Message-no-profile-photo {
+  margin: 3px 10px 3px 10px;
+  color: rgb(31, 31, 34);
+  width: 100%;
+}
+
+.Message-no-profile-photo:hover {
+  color: rgb(143, 143, 158);
+  width: 100%;
 }
 
 .Message-profile-name {
   font-weight: bolder;
   font-size: 15px;
-  margin: 2px;
+  margin: 2px 8px 2px 2px;
 }
 
 .Message-profile-time {
   font-size: 12px;
   margin-left: 2px;
+  margin-right: 10px;
+  color: rgb(143, 143, 158);
+}
+
+.Message-profile-time-hide {
+  font-size: 12px;
+  margin-left: 2px;
+  margin-right: 10px;
 }
 
 .Message-text {
-  font-weight: bold;
   font-size: 15px;
-  margin: 2px;
+  margin: 3px;
+  color: whitesmoke;
 }
 
 .Body-message {
-  position: fixed;
-  min-height: 100vh;
-  top: 76px;
   overflow-y: scroll;
-  overflow-x: auto;
-  bottom: 0;
-  width: 80%;
+  height: 62vh;
+}
+
+.Message-date {
+  border: 1px solid rgb(106, 109, 119);
+  border-radius: 4vh;
   text-align: center;
-  left: 20%;
-  bottom: 0;
-  margin: 0;
-  border-color: rgba(45, 47, 52, 1);
-  border-width: 1px;
-  border-style: solid;
+  color: whitesmoke;
+  width: fit-content;
+  align-self: center;
+  padding: 0.2rem 0.8rem 0.2rem 0.8rem;
+  margin: 0.5rem;
 }
 
 .Message-input-box {
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  width: 100%;
+  right: 0;
+  display: flex;
+  border: 1px solid rgb(106, 109, 119);
+  background-color: rgb(31, 31, 34);
+  border-radius: 1vh;
+  width: 69%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  padding-left: 3rem;
+  padding-right: 1rem;
 }
+
+.Message-input {
+  height: 7.5rem;
+  width: 90%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .Workspace {
   background-color: #4a154b;
   display: flex;
@@ -258,4 +343,36 @@
 .Login-logo-resize {
   width: 200px;
   height: auto;
+}
+
+.button {
+  background-color: #171517;
+  color: white;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  border: none;
+}
+
+.button2 {
+  background-color: rgb(31, 31, 34);
+  color: white;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  border: none;
+}
+
+.button-hover:hover {
+  background-color: rgb(43, 43, 49);
+  border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar {
+  background-color: #171517;
+  width: 8px;
+  height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(86, 86, 94);
+  border-radius: 10rem;
 }

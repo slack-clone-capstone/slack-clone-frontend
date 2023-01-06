@@ -16,9 +16,11 @@ const Header = ({ setUserId, setWorkspaceId }) => {
 
   return (
     <div className="Header">
-      <button>Help</button>
-      <button>Profile</button>
-      <button onClick={handleClickLogout}>Log Out</button>
+      <button className="Header-buttons">Help</button>
+      <button className="Header-buttons">Profile</button>
+      <button className="Header-buttons" onClick={handleClickLogout}>
+        Log Out
+      </button>
     </div>
   );
 };
