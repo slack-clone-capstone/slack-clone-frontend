@@ -94,50 +94,86 @@
   background-color: rgb(31, 31, 34);
 }
 
-.Body-content {
-}
-
-.Body-channel-header {
-}
-
 .Message {
-  margin: 5px;
+  margin: 3px;
   display: flex;
   flex-direction: row;
-  background-color: darkslategrey;
+  color: whitesmoke;
+}
+
+.Message:hover {
+  background-color: rgb(47, 47, 51);
+  color: whitesmoke;
 }
 
 .Message-profile-photo {
   height: 36px;
   line-height: 36px;
   width: 36px;
-  background-color: rgba(30, 75, 63, 1);
+  background-color: rgb(44, 81, 116);
   font-weight: bold;
   text-align: center;
   vertical-align: middle;
-  margin: 3px;
+  margin: 3px 10px 3px 10px;
+  border-radius: 0.3rem;
+}
+
+.Message-no-profile-photo {
+  margin: 3px 10px 3px 10px;
+  color: rgb(31, 31, 34);
+  width: 100%;
+}
+
+.Message-no-profile-photo:hover {
+  /* margin: 3px 10px 3px 10px; */
+  color: rgb(143, 143, 158);
+  width: 100%;
 }
 
 .Message-profile-name {
   font-weight: bolder;
   font-size: 15px;
-  margin: 2px;
+  margin: 2px 8px 2px 2px;
 }
 
 .Message-profile-time {
   font-size: 12px;
   margin-left: 2px;
+  margin-right: 10px;
+  color: rgb(143, 143, 158);
+}
+.Message-profile-time-hide {
+  font-size: 12px;
+  margin-left: 2px;
+  margin-right: 10px;
 }
 
 .Message-text {
-  font-weight: bold;
   font-size: 15px;
-  margin: 2px;
+  margin: 3px;
+  color: whitesmoke;
 }
 
 .Body-message {
   overflow-y: scroll;
   height: 62vh;
+}
+
+.Message-date-container {
+  position: sticky;
+  top: 0;
+  background-color: rgb(31, 31, 34);
+}
+
+.Message-date {
+  border: 1px solid rgb(106, 109, 119);
+  border-radius: 4vh;
+  text-align: center;
+  color: whitesmoke;
+  width: fit-content;
+  align-self: center;
+  padding: 0.2rem 0.8rem 0.2rem 0.8rem;
+  margin: 0.5rem;
 }
 
 .Message-input-box {

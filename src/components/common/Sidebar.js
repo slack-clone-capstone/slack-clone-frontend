@@ -45,7 +45,7 @@ const Sidebar = () => {
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [newChannelPrivate, setNewChannelPrivate] = useState(false);
-  const [channelCollapsed, setChannelCollapsed] = useState(true);
+  const [channelCollapsed, setChannelCollapsed] = useState(false);
 
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
