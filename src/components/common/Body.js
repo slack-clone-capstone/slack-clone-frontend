@@ -203,58 +203,71 @@ const Body = () => {
   }, [socket]);
 
   return (
-    <div className="Body-content">
-      <div className="Body-message">
-        {Object.entries(sortedMessagesDict)?.map((item) => {
-          const [dateOnly, messageArr] = item;
-          return (
-            <div className="Message-block">
-              <div className="Message-date">{dateOnly}</div>
-              <div className="Message-block-2">
-                {messageArr?.map((messageItem, index) => (
-                  <div key={index}>
-                    <Message
-                      date={messageItem.date}
-                      msgDate={messageItem.msgDate}
-                      msgTime={messageItem.msgTime}
-                      text={messageItem.text}
-                      abbreviatedName={messageItem.abbreviatedName}
-                      username={messageItem.username}
-                      classNameTag={messageItem.classNameTag}
-                    />
-                  </div>
-                ))}
+    <>
+      <div
+        className="Sidebar-Body-header"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>{selectedChat}</div>
+        {/* <div> members</div> */}
+      </div>
+      <div className="Body-content">
+        <div className="Body-message">
+          {Object.entries(sortedMessagesDict)?.map((item) => {
+            const [dateOnly, messageArr] = item;
+            return (
+              <div className="Message-block">
+                <div className="Message-date">{dateOnly}</div>
+                <div className="Message-block-2">
+                  {messageArr?.map((messageItem, index) => (
+                    <div key={index}>
+                      <Message
+                        date={messageItem.date}
+                        msgDate={messageItem.msgDate}
+                        msgTime={messageItem.msgTime}
+                        text={messageItem.text}
+                        abbreviatedName={messageItem.abbreviatedName}
+                        username={messageItem.username}
+                        classNameTag={messageItem.classNameTag}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
 
-        {messageReceived?.map((messageItem, index) => (
-          <div key={index}>
-            <Message
-              date={messageItem.date}
-              text={messageItem.text}
-              abbreviatedName={messageItem.abbreviatedName}
-              username={messageItem.username}
-              classNameTag="msg-with-dp"
+          {messageReceived?.map((messageItem, index) => (
+            <div key={index}>
+              <Message
+                date={messageItem.date}
+                text={messageItem.text}
+                abbreviatedName={messageItem.abbreviatedName}
+                username={messageItem.username}
+                classNameTag="msg-with-dp"
+              />
+            </div>
+          ))}
+          <div className="Message-input-box">
+            <textarea
+              type="input"
+              className="Message-input"
+              placeholder="Message..."
+              onChange={(event) => {
+                setMessageTyped(event.target.value);
+              }}
             />
+            <button className="button2 button-hover" onClick={sendMessage}>
+              <SendIcon />
+            </button>
           </div>
-        ))}
-        <div className="Message-input-box">
-          <textarea
-            type="input"
-            className="Message-input"
-            placeholder="Message..."
-            onChange={(event) => {
-              setMessageTyped(event.target.value);
-            }}
-          />
-          <button className="button2 button-hover" onClick={sendMessage}>
-            <SendIcon />
-          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

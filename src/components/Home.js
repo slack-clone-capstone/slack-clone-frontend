@@ -15,29 +15,17 @@ const Home = () => {
   // getting users in the selected chat
 
   return (
-    <div>
+    <>
       <Header setUserId={setUserId} setWorkspaceId={setWorkspaceId} />
       <div className="Home-content">
         <div className="Sidebar">
           <Sidebar />
         </div>
         <div className="Body">
-          <div
-            className="Sidebar-Body-header"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>{selectedChat}</div>
-            {/* <div> members</div> */}
-          </div>
-
           <Body />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
