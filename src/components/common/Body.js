@@ -168,7 +168,7 @@ const Body = () => {
         <div>{selectedChat}</div>
         <div> {selectedChat ? "members" : ""}</div>
       </div>
-      <div>
+      <div className="Body-message-container">
         <div className="Body-message">
           {Object.entries(sortedMessagesDict)?.map((item) => {
             const [dateOnly, messageArr] = item;
