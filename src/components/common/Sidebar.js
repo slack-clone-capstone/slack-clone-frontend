@@ -16,20 +16,6 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "rgb(31, 31, 34)",
-  color: "whitesmoke",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-  borderRadius: "10px",
-};
-
 const Sidebar = () => {
   const { user, getAccessTokenSilently } = useAuth0();
   const { userId } = useUserContext();
@@ -236,173 +222,180 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="Sidebar-content">
-      <div className="Sidebar-chats">
-        <div className="Sidebar-chat-header">
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <button
-              onClick={handleChannelCollapseClick}
-              className="button button-hover"
-            >
-              {channelCollapsed ? <ArrowRightIcon /> : <ArrowDropDownIcon />}
-            </button>
-            <div>Channels</div>
-          </div>
-          <div>
-            <Modal
-              open={channelOpen}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <Typography variant="h6" component="h2">
-                  Create a channel
-                </Typography>
-                <form onSubmit={submitNewChannel}>
-                  <label>
-                    <Typography sx={{ mt: 2 }}>New channel name:</Typography>
-                    <input
-                      name="channel-name"
-                      type="text"
-                      value={newChannelName}
-                      onChange={(e) => setNewChannelName(e.target.value)}
-                    />
-                  </label>
-                  <label>
-                    <Typography sx={{ mt: 2 }}>Description:</Typography>
-                    <input
-                      name="channel-description"
-                      type="text"
-                      value={newChannelDescription}
-                      onChange={(e) => setNewChannelDescription(e.target.value)}
-                    />
-                  </label>
-                  <label>
-                    <Typography sx={{ mt: 2 }}>Make private?</Typography>
-                    <Switch
-                      checked={newChannelPrivate}
-                      onChange={editChannelPrivate}
-                      inputProps={{ "aria-label": "controlled" }}
-                    />
-                  </label>
-                  <br />
-                  <input type="submit" value="Create channel" />
-                </form>
-              </Box>
-            </Modal>
-            <button
-              className="Sidebar-new-chat button button-hover"
-              onClick={newChannelModal}
-              style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem" }}
-            >
-              +
-            </button>
-          </div>
-        </div>
-        <div style={{ display: channelCollapsed ? "none" : "block" }}>
-          {chatsList?.map(
-            (chat, index) =>
-              chat.type === "channel" && (
-                <div key={index} style={{}}>
-                  <button
-                    className="Sidebar-chat-item"
-                    onClick={handleClick}
-                    id={chat.id}
-                    name={chat.channelName}
-                  >
-                    <div style={{ paddingRight: "0.5rem" }}>
-                      {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
-                    </div>
-                    <div>{chat.channelName}</div>
-                  </button>
-                </div>
-              )
-          )}
-        </div>
-
-        <div className="Sidebar-chat-header">
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <button
-              className="button button-hover"
-              onClick={handleDmCollapseClick}
-            >
-              {dmCollapsed ? <ArrowRightIcon /> : <ArrowDropDownIcon />}
-            </button>
-            <div>Direct Messages</div>
-          </div>
-          <div>
-            {" "}
-            <Modal
-              open={dMOpen}
-              onClose={handleDMClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <Typography variant="h6" component="h2">
-                  Add users to direct message:
-                </Typography>
-                <form onSubmit={submitNewDM}>
-                  <FormGroup>
-                    {usersList?.map((userItem, index) => (
-                      <FormControlLabel
-                        // className="twocolelement"
-                        key={index}
-                        control={
-                          <Checkbox
-                            onChange={updateChecks}
-                            index={index}
-                            id={userItem.id.toString()}
-                            inputProps={{ "aria-label": "controlled" }}
-                          />
-                        }
-                        label={
-                          userItem.firstName +
-                          " " +
-                          userItem.lastName +
-                          " " +
-                          userItem.username
+    <>
+      <div className="Sidebar-Body-header">{selectedWorkspace}</div>
+      <div className="Sidebar-content">
+        <div className="Sidebar-chats">
+          <div className="Sidebar-chat-header">
+            <div className="Sidebar-chat-header-div">
+              <button
+                onClick={handleChannelCollapseClick}
+                className="button button-hover"
+              >
+                {channelCollapsed ? <ArrowRightIcon /> : <ArrowDropDownIcon />}
+              </button>
+              <div>Channels</div>
+            </div>
+            <div>
+              <Modal
+                open={channelOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box className="Modal-new-chat">
+                  <Typography variant="h6" component="h2">
+                    Create a channel
+                  </Typography>
+                  <form onSubmit={submitNewChannel}>
+                    <label>
+                      <Typography sx={{ mt: 2 }}>New channel name:</Typography>
+                      <input
+                        name="channel-name"
+                        type="text"
+                        value={newChannelName}
+                        onChange={(e) => setNewChannelName(e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      <Typography sx={{ mt: 2 }}>Description:</Typography>
+                      <input
+                        name="channel-description"
+                        type="text"
+                        value={newChannelDescription}
+                        onChange={(e) =>
+                          setNewChannelDescription(e.target.value)
                         }
                       />
-                    ))}
-                  </FormGroup>
+                    </label>
+                    <label>
+                      <Typography sx={{ mt: 2 }}>Make private?</Typography>
+                      <Switch
+                        checked={newChannelPrivate}
+                        onChange={editChannelPrivate}
+                        inputProps={{ "aria-label": "controlled" }}
+                      />
+                    </label>
+                    <br />
+                    <input type="submit" value="Create channel" />
+                  </form>
+                </Box>
+              </Modal>
+              <button
+                className="Sidebar-new-chat button button-hover"
+                onClick={newChannelModal}
+              >
+                +
+              </button>
+            </div>
+          </div>
+          <div style={{ display: channelCollapsed ? "none" : "block" }}>
+            {chatsList?.map(
+              (chat, index) =>
+                chat.type === "channel" && (
+                  <div key={index}>
+                    <button
+                      className="Sidebar-chat-item"
+                      onClick={handleClick}
+                      id={chat.id}
+                      name={chat.channelName}
+                    >
+                      <div
+                        className="not-clickable"
+                        style={{ paddingRight: "0.5rem" }}
+                      >
+                        {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
+                      </div>
+                      <div className="Sidebar-overflow not-clickable">
+                        {chat.channelName}
+                      </div>
+                    </button>
+                  </div>
+                )
+            )}
+          </div>
 
-                  <br />
-                  <input type="submit" value="New conversation" />
-                </form>
-              </Box>
-            </Modal>
-            <button
-              className="Sidebar-new-chat button button-hover"
-              onClick={newDMModal}
-              style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem" }}
-            >
-              +
-            </button>
+          <div className="Sidebar-chat-header">
+            <div className="Sidebar-chat-header-div">
+              <button
+                className="button button-hover"
+                onClick={handleDmCollapseClick}
+              >
+                {dmCollapsed ? <ArrowRightIcon /> : <ArrowDropDownIcon />}
+              </button>
+              <div>Direct Messages</div>
+            </div>
+            <div>
+              <Modal
+                open={dMOpen}
+                onClose={handleDMClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box className="Modal-new-chat">
+                  <Typography variant="h6" component="h2">
+                    Add users to direct message:
+                  </Typography>
+                  <form onSubmit={submitNewDM}>
+                    <FormGroup>
+                      {usersList?.map((userItem, index) => (
+                        <FormControlLabel
+                          // className="twocolelement"
+                          key={index}
+                          control={
+                            <Checkbox
+                              onChange={updateChecks}
+                              index={index}
+                              id={userItem.id.toString()}
+                              inputProps={{ "aria-label": "controlled" }}
+                            />
+                          }
+                          label={
+                            userItem.firstName +
+                            " " +
+                            userItem.lastName +
+                            " " +
+                            userItem.username
+                          }
+                        />
+                      ))}
+                    </FormGroup>
+
+                    <br />
+                    <input type="submit" value="New conversation" />
+                  </form>
+                </Box>
+              </Modal>
+              <button
+                className="Sidebar-new-chat button button-hover"
+                onClick={newDMModal}
+              >
+                +
+              </button>
+            </div>
+          </div>
+          <div style={{ display: dmCollapsed ? "none" : "block" }}>
+            {chatsList?.map(
+              (chat, index) =>
+                chat.type === "direct message" && (
+                  <div key={index}>
+                    <button
+                      className="Sidebar-chat-item Sidebar-overflow"
+                      onClick={handleClick}
+                      id={chat.id}
+                      name={chat.channelName}
+                      name={chat.usersInDM}
+                    >
+                      {chat.channelName}
+                      {chat.usersInDM}
+                    </button>
+                  </div>
+                )
+            )}
           </div>
         </div>
-        <div style={{ display: dmCollapsed ? "none" : "block" }}>
-          {chatsList?.map(
-            (chat, index) =>
-              chat.type === "direct message" && (
-                <div key={index} style={{}}>
-                  <button
-                    className="Sidebar-chat-item Sidebar-overflow"
-                    onClick={handleClick}
-                    id={chat.id}
-                    name={chat.channelName}
-                    name={chat.usersInDM}
-                  >
-                    {chat.channelName}
-                    {chat.usersInDM}
-                  </button>
-                </div>
-              )
-          )}
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 
