@@ -30,8 +30,8 @@ const Message = ({
     return (
       <div className="Message">
         <div className="Message-no-profile-photo">
-          <span className="Message-profile-time-hide">{msgTime}</span>
-          <span className="Message-text">{text}</span>
+          <div className="Message-profile-time-hide">{msgTime}</div>
+          <div className="Message-text">{text}</div>
         </div>
       </div>
     );

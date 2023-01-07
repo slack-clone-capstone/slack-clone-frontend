@@ -154,7 +154,8 @@ x .not-clickable {
 .Message-profile-photo {
   height: 36px;
   line-height: 36px;
-  width: 36px;
+  max-width: 36x;
+  min-width: 36px;
   background-color: rgb(44, 81, 116);
   font-weight: bold;
   text-align: center;
@@ -167,6 +168,8 @@ x .not-clickable {
   margin: 3px 10px 3px 10px;
   color: rgb(31, 31, 34);
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .Message-no-profile-photo:hover {
@@ -197,6 +200,7 @@ x .not-clickable {
   font-size: 15px;
   margin: 3px;
   color: whitesmoke;
+  word-break: break-all;
 }
 
 .Message-date {

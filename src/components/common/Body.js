@@ -59,7 +59,6 @@ const Body = () => {
     }
 
     setMessagesList(messageItemArr);
-    // console.log(messagesList[1]);
 
     // sorting message data
     let messageListDict = {};
@@ -112,45 +111,6 @@ const Body = () => {
     }
 
     setSortedMessagesDict(messageListDict);
-    console.log(sortedMessagesDict);
-
-    // console.log(sortedMessagesDict);
-
-    // Object.entries(sortedMessagesDict).map((item) => {
-    //   console.log(item[0], item[1]);
-    // });
-
-    // console.log(messageListDict);
-
-    // sorting message data // it is already sorted when pulled out from database
-    // let sortedMessageItemArr = [];
-
-    // for (let i = 0; i < messageItemArr.length; i += 1) {
-    //   // different classes - msg-with-date, msg-with-dp, msg-only
-
-    //   if (i == 0) {
-    //     messageItemArr[i]["classNameTag"] = "msg-with-date";
-    //   } else {
-    //     if (
-    //       messageItemArr[i].date.split("T")[0] !=
-    //       messageItemArr[i - 1].date.split("T")[0]
-    //     ) {
-    //       messageItemArr[i]["classNameTag"] = "msg-with-date";
-    //     } else if (
-    //       messageItemArr[i].date.split("T")[0] ==
-    //         messageItemArr[i - 1].date.split("T")[0] &&
-    //       messageItemArr[i].userId != messageItemArr[i - 1].userId
-    //     ) {
-    //       messageItemArr[i]["classNameTag"] = "msg-with-dp";
-    //     } else {
-    //       messageItemArr[i]["classNameTag"] = "msg-only";
-    //     }
-    //   }
-    //   sortedMessageItemArr.push(messageItemArr[i]);
-    // }
-
-    // setSortedMessagesList(sortedMessageItemArr);
-    // console.log(sortedMessageItemArr);
   };
 
   const joinRoom = () => {
