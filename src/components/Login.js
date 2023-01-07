@@ -22,9 +22,7 @@ const Login = () => {
     loginWithRedirect,
     isAuthenticated,
     getAccessTokenSilently,
-    loginWithPopup,
     logout,
-    isLoading,
   } = useAuth0();
   const { workspaceId } = useWorkspaceContext();
 
@@ -41,7 +39,9 @@ const Login = () => {
 
   const postUserBackend = async () => {
     const accessToken = await getAccessTokenSilently({});
+
     console.log("Posting to backend user data... " + user);
+
     const response = await axios.post(
       `${BACKEND_URL}/users`,
       {
@@ -65,8 +65,6 @@ const Login = () => {
   const handleClickLogin = async () => {
     console.log("Is user authenticated? " + isAuthenticated);
     if (!isAuthenticated) {
-      // either option works
-      // await loginWithPopup();
       await loginWithRedirect();
     }
     navigate("/workspace");
