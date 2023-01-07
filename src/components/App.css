@@ -127,6 +127,7 @@
   display: flex;
   flex-direction: row;
   color: whitesmoke;
+  width: 100%;
 }
 
 .Message:hover {
@@ -190,12 +191,29 @@
 .Message-date {
   border: 1px solid rgb(106, 109, 119);
   border-radius: 4vh;
-  text-align: center;
   color: whitesmoke;
   width: fit-content;
-  align-self: center;
   padding: 0.2rem 0.8rem 0.2rem 0.8rem;
   margin: 0.5rem;
+  position: sticky;
+  top: 0;
+  background-color: rgb(31, 31, 34);
+  display: flex;
+  justify-content: center;
+}
+
+.Message-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.Message-block-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
 }
 
 .Message-input-box {
