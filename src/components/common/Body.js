@@ -204,16 +204,9 @@ const Body = () => {
 
   return (
     <>
-      <div
-        className="Sidebar-Body-header"
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
+      <div className="Sidebar-Body-header Sidebar-body-header-only">
         <div>{selectedChat}</div>
-        {/* <div> members</div> */}
+        <div> members</div>
       </div>
       <div className="Body-content">
         <div className="Body-message">
@@ -252,19 +245,19 @@ const Body = () => {
               />
             </div>
           ))}
-          <div className="Message-input-box">
-            <textarea
-              type="input"
-              className="Message-input"
-              placeholder="Message..."
-              onChange={(event) => {
-                setMessageTyped(event.target.value);
-              }}
-            />
-            <button className="button2 button-hover" onClick={sendMessage}>
-              <SendIcon />
-            </button>
-          </div>
+        </div>
+        <div className="Message-input-box">
+          <textarea
+            type="input"
+            className="Message-input"
+            placeholder="Message..."
+            onChange={(event) => {
+              setMessageTyped(event.target.value);
+            }}
+          />
+          <button className="button2 button-hover" onClick={sendMessage}>
+            <SendIcon />
+          </button>
         </div>
       </div>
     </>
