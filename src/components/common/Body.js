@@ -24,6 +24,7 @@ const Body = () => {
   const [messageTyped, setMessageTyped] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
   const [sortedMessagesDict, setSortedMessagesDict] = useState({});
+  const [typingStatus, setTypingStatus] = useState("");
   // const [nameAbbreviation, setNameAbbreviation] = useState("");
 
   const getMessageData = async () => {
@@ -162,13 +163,34 @@ const Body = () => {
     });
   }, [socket]);
 
+  const handleTyping = () => {
+    console.log("typing..");
+    // socket.emit("typing", selectedChatId);
+    socket.emit("typing", { selectedChatId, userUsername });
+
+    // setTypingStatus(`${userUsername} is typing...`);
+  };
+
+  useEffect(() => {
+    console.log("typing response...");
+    socket.on("typing_response", (data) => {
+      console.log(data);
+      setTypingStatus(data);
+
+      // after 3 seconds, clear typing status
+      setTimeout(() => {
+        setTypingStatus("");
+      }, 3000);
+    });
+  }, [socket]);
+
   return (
     <>
       <div className="Sidebar-Body-header Sidebar-body-header-only">
         <div>{selectedChat}</div>
         <div> {selectedChat ? "members" : ""}</div>
       </div>
-      <div className="Body-message-container">
+      <div className="Body-content">
         <div className="Body-message">
           {Object.entries(sortedMessagesDict)?.map((item) => {
             const [dateOnly, messageArr] = item;
@@ -206,18 +228,28 @@ const Body = () => {
           ))}
         </div>
         {selectedChat && (
-          <div className="Message-input-box">
-            <textarea
-              type="input"
-              className="Message-input"
-              placeholder="Message..."
-              onChange={(event) => {
-                setMessageTyped(event.target.value);
-              }}
-            />
-            <button className="button2 button-hover" onClick={sendMessage}>
-              <SendIcon />
-            </button>
+          <div className="Message-editor">
+            <div className="Message-input-box">
+              <div className="Message-typing">
+                {typingStatus &&
+                  typingStatus !== userUsername &&
+                  `${typingStatus} is typing ...`}
+              </div>
+              <div className="Message-box">
+                <textarea
+                  type="input"
+                  className="Message-input"
+                  placeholder="Message..."
+                  onChange={(event) => {
+                    setMessageTyped(event.target.value);
+                  }}
+                  onKeyDown={handleTyping}
+                />
+                <button className="button2 button-hover" onClick={sendMessage}>
+                  <SendIcon />
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
