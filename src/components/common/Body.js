@@ -32,6 +32,7 @@ const Body = () => {
     const response = await axios.get(
       `${BACKEND_URL}/messages/${selectedChatId}`,
       {
+        params: { userId: userId },
         headers: { Authorization: `Bearer ${accessToken}` },
       }
     );
@@ -50,12 +51,15 @@ const Body = () => {
         userResponse.data.first_name.charAt(0) +
         userResponse.data.last_name.charAt(0);
       const messageItem = {};
+
+      console.log(response.data[i].is_read);
       messageItem["id"] = response.data[i].id;
       messageItem["userId"] = response.data[i].userId;
       messageItem["date"] = response.data[i].date;
       messageItem["text"] = response.data[i].text;
       messageItem["abbreviatedName"] = abbreviatedName;
       messageItem["username"] = userResponse.data.username;
+      messageItem["isRead"] = response.data[i].is_read;
       messageItemArr.push(messageItem);
     }
 
@@ -197,6 +201,9 @@ const Body = () => {
                 <div className="Message-block-2">
                   {messageArr?.map((messageItem, index) => (
                     <div key={index}>
+                      <div style={{ color: "white" }}>
+                        {messageItem.isRead ? "read" : "unread"}
+                      </div>
                       <Message
                         date={messageItem.date}
                         msgDate={messageItem.msgDate}
