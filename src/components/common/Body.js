@@ -164,15 +164,12 @@ const Body = () => {
   }, [socket]);
 
   const handleTyping = () => {
-    console.log("typing..");
-    // socket.emit("typing", selectedChatId);
+    // console.log("typing..");
     socket.emit("typing", { selectedChatId, userUsername });
-
-    // setTypingStatus(`${userUsername} is typing...`);
   };
 
   useEffect(() => {
-    console.log("typing response...");
+    // console.log("typing response...");
     socket.on("typing_response", (data) => {
       console.log(data);
       setTypingStatus(data);

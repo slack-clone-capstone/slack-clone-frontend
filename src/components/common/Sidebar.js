@@ -10,6 +10,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import Grid3x3Icon from "@mui/icons-material/Grid3x3";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 
 const Sidebar = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -46,6 +47,7 @@ const Sidebar = () => {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setChats(response.data);
+    console.log(response.data);
     console.log("Chats retrieved for " + user.given_name);
 
     const chatsListArr = [];
@@ -57,6 +59,8 @@ const Sidebar = () => {
       chatItem["channelName"] = response.data[i].channel_name;
       chatItem["channelDescription"] = response.data[i].channel_description;
       chatItem["channelPrivate"] = response.data[i].channel_private;
+      chatItem["hasUnreadMessages"] = response.data[i].has_unread_messages;
+      chatItem["numUnreadMessages"] = response.data[i].num_unread_messages;
 
       // if the chat is a Direct Message
       if (response.data[i].type === "direct message") {
@@ -248,19 +252,28 @@ const Sidebar = () => {
                 chat.type === "channel" && (
                   <div key={index}>
                     <button
-                      className="Sidebar-chat-item"
+                      className={
+                        chat.hasUnreadMessages
+                          ? `Sidebar-chat-item Sidebar-chat-item-bold`
+                          : `Sidebar-chat-item`
+                      }
                       onClick={handleClick}
                       id={chat.id}
                       name={chat.channelName}
                     >
-                      <div
-                        className="not-clickable"
-                        style={{ paddingRight: "0.5rem" }}
-                      >
-                        {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
+                      <div className="Sidebar-channel-icon-and-name">
+                        <div
+                          className="not-clickable"
+                          style={{ paddingRight: "0.5rem" }}
+                        >
+                          {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
+                        </div>
+                        <div className="Sidebar-overflow not-clickable">
+                          {chat.channelName}
+                        </div>
                       </div>
-                      <div className="Sidebar-overflow not-clickable">
-                        {chat.channelName}
+                      <div className="Sidebar-unread-message-bubble not-clickable">
+                        {chat.hasUnreadMessages && chat.numUnreadMessages}
                       </div>
                     </button>
                   </div>
@@ -297,14 +310,31 @@ const Sidebar = () => {
                 chat.type === "direct message" && (
                   <div key={index}>
                     <button
-                      className="Sidebar-chat-item Sidebar-overflow"
+                      className={
+                        chat.hasUnreadMessages
+                          ? `Sidebar-chat-item Sidebar-chat-item-bold `
+                          : `Sidebar-chat-item `
+                      }
                       onClick={handleClick}
                       id={chat.id}
                       name={chat.channelName}
                       name={chat.usersInDM}
                     >
-                      {chat.channelName}
-                      {chat.usersInDM}
+                      <div className="Sidebar-channel-icon-and-name">
+                        <div
+                          className="not-clickable"
+                          style={{ paddingRight: "0.5rem" }}
+                        >
+                          <PeopleAltRoundedIcon />
+                        </div>
+                        <div className="Sidebar-overflow not-clickable">
+                          {chat.channelName}
+                          {chat.usersInDM}
+                        </div>
+                      </div>
+                      <div className="Sidebar-unread-message-bubble not-clickable">
+                        {chat.hasUnreadMessages && chat.numUnreadMessages}
+                      </div>
                     </button>
                   </div>
                 )
