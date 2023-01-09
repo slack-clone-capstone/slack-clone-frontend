@@ -126,7 +126,7 @@ const Body = () => {
       getMessageData();
       setMessageReceived([]);
       // upon loading into chat, chat messages should be marked all read
-      handleClickReadAllChatMessage();
+      // handleClickReadAllChatMessage();
     }
   };
 

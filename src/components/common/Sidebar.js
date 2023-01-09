@@ -34,6 +34,7 @@ const Sidebar = () => {
   const [dMCollapsed, setDMCollapsed] = useState(false);
   const [dMOpen, setDMOpen] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [refreshSidebar, setRefreshSidebar] = useState(false);
 
   // refactoring
   const getChats = async () => {
@@ -132,12 +133,17 @@ const Sidebar = () => {
   // so that side bar will rerender and unread messages bubble disappears
   useEffect(() => {
     console.log("selected another chat");
-    // getChats();
+    getChats();
   }, [selectedChatId]);
+
+  useEffect(() => {
+    getChats();
+  }, [refreshSidebar]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
     setSelectedChatId(e.target.id);
+    setRefreshSidebar(!refreshSidebar);
   };
 
   const newChannelModal = () => {
