@@ -42,7 +42,7 @@ const Sidebar = () => {
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
-      params: { userId: 4, workspaceId: workspaceId },
+      params: { userId: 1, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setChats(response.data);
@@ -128,6 +128,7 @@ const Sidebar = () => {
   }, [channelOpen, dMOpen]);
 
   const handleClick = (e) => {
+    console.log(e.target);
     setSelectedChat(e.target.name);
     setSelectedChatId(e.target.id);
   };
@@ -158,8 +159,6 @@ const Sidebar = () => {
         channelPrivate: null,
         othersUserId: selectedUserIds,
       },
-      // for testing purposes, userId = 1
-      // params: { userId: userId, workspaceId: workspaceId },
       {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
@@ -176,19 +175,24 @@ const Sidebar = () => {
   };
 
   const updateChecks = (e) => {
-    if (e.target.checked === true && !selectedUserIds.includes(+e.target.id)) {
+    console.log(e.target.checked);
+    if (e.target.checked === true && !selectedUserIds.includes(e.target.id)) {
+      console.log("case 1");
       setSelectedUserIds([...selectedUserIds, e.target.id]);
     }
-    if (e.target.checked === false && selectedUserIds.includes(+e.target.id)) {
+    if (e.target.checked === false && selectedUserIds.includes(e.target.id)) {
       let cloneSelectedUserIds = [...selectedUserIds];
-      let indexForDeletion = selectedUserIds.indexOf(+e.target.id);
+      let indexForDeletion = selectedUserIds.indexOf(e.target.id);
       if (indexForDeletion === 0 && cloneSelectedUserIds.length === 1) {
         setSelectedUserIds([]);
+        console.log("case 2");
       } else {
         cloneSelectedUserIds.splice(indexForDeletion, 1);
         setSelectedUserIds(cloneSelectedUserIds);
+        console.log("case 3");
       }
     }
+    console.log(selectedUserIds);
   };
 
   const handleDMClose = () => {
@@ -197,7 +201,9 @@ const Sidebar = () => {
 
   const submitNewDM = (e) => {
     e.preventDefault();
-    createNewDM();
+    if (selectedUserIds.length !== 0) {
+      createNewDM();
+    }
   };
 
   const handleClickCollapsible = (e) => {
@@ -248,20 +254,15 @@ const Sidebar = () => {
                 chat.type === "channel" && (
                   <div key={index}>
                     <button
-                      className="Sidebar-chat-item"
+                      className="Sidebar-chat-item not-clickable Sidebar-overflow "
                       onClick={handleClick}
                       id={chat.id}
                       name={chat.channelName}
+                      style={{ paddingRight: "0.5rem" }}
                     >
-                      <div
-                        className="not-clickable"
-                        style={{ paddingRight: "0.5rem" }}
-                      >
-                        {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
-                      </div>
-                      <div className="Sidebar-overflow not-clickable">
-                        {chat.channelName}
-                      </div>
+                      {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}{" "}
+                      &nbsp;
+                      {chat.channelName}
                     </button>
                   </div>
                 )
@@ -300,7 +301,6 @@ const Sidebar = () => {
                       className="Sidebar-chat-item Sidebar-overflow"
                       onClick={handleClick}
                       id={chat.id}
-                      name={chat.channelName}
                       name={chat.usersInDM}
                     >
                       {chat.channelName}
