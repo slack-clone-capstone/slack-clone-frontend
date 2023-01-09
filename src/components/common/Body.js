@@ -148,6 +148,7 @@ const Body = () => {
       username: userUsername,
     };
     await socket.emit("send_message", messageToEmit);
+    setMessageTyped("");
   };
 
   useEffect(() => {
@@ -211,6 +212,7 @@ const Body = () => {
               type="input"
               className="Message-input"
               placeholder="Message..."
+              value={messageTyped}
               onChange={(event) => {
                 setMessageTyped(event.target.value);
               }}
