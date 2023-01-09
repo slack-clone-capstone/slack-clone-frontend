@@ -95,7 +95,7 @@ const Body = () => {
 
         if (
           diff <= 10 &&
-          messageItemArr[i].userId ==
+          messageItemArr[i].userId ===
             messageListDict[currentMsgDate][
               messageListDict[currentMsgDate].length - 1
             ].userId
