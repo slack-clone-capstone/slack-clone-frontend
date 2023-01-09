@@ -128,7 +128,6 @@ const Sidebar = () => {
   }, [channelOpen, dMOpen]);
 
   const handleClick = (e) => {
-    console.log(e.target);
     setSelectedChat(e.target.name);
     setSelectedChatId(e.target.id);
   };
@@ -175,9 +174,7 @@ const Sidebar = () => {
   };
 
   const updateChecks = (e) => {
-    console.log(e.target.checked);
     if (e.target.checked === true && !selectedUserIds.includes(e.target.id)) {
-      console.log("case 1");
       setSelectedUserIds([...selectedUserIds, e.target.id]);
     }
     if (e.target.checked === false && selectedUserIds.includes(e.target.id)) {
@@ -185,14 +182,11 @@ const Sidebar = () => {
       let indexForDeletion = selectedUserIds.indexOf(e.target.id);
       if (indexForDeletion === 0 && cloneSelectedUserIds.length === 1) {
         setSelectedUserIds([]);
-        console.log("case 2");
       } else {
         cloneSelectedUserIds.splice(indexForDeletion, 1);
         setSelectedUserIds(cloneSelectedUserIds);
-        console.log("case 3");
       }
     }
-    console.log(selectedUserIds);
   };
 
   const handleDMClose = () => {
