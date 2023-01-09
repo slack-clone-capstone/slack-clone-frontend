@@ -122,8 +122,11 @@ const Body = () => {
     if (selectedChatId !== "") {
       socket.emit("join_room", selectedChatId);
       console.log(userUsername + " entered " + selectedChat);
+
       getMessageData();
       setMessageReceived([]);
+      // upon loading into chat, chat messages should be marked all read
+      handleClickReadAllChatMessage();
     }
   };
 
@@ -153,6 +156,9 @@ const Body = () => {
       username: userUsername,
     };
     await socket.emit("send_message", messageToEmit);
+
+    // assume that for user to send a message, he/she must have read all the messages already
+    handleClickReadAllChatMessage();
   };
 
   useEffect(() => {
@@ -189,8 +195,6 @@ const Body = () => {
   const handleClickReadAllChatMessage = async () => {
     const accessToken = await getAccessTokenSilently({});
     // get all the unread messageIds
-    // console.log(messagesList);
-
     let unreadMessageIds = [];
 
     messagesList.forEach((message) => {
@@ -200,7 +204,7 @@ const Body = () => {
       }
     });
 
-    console.log(unreadMessageIds);
+    console.log(unreadMessageIds); // to check regarding this rendering!!
 
     await axios.put(
       `${BACKEND_URL}/messages/${selectedChatId}`,
@@ -210,10 +214,6 @@ const Body = () => {
       }
     );
   };
-
-  useEffect(() => {
-    handleClickReadAllChatMessage();
-  }, [selectedChatId]);
 
   return (
     <>

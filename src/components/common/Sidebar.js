@@ -44,7 +44,7 @@ const Sidebar = () => {
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
-      params: { userId: 3, workspaceId: workspaceId },
+      params: { userId: userId, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setChats(response.data);
@@ -104,7 +104,7 @@ const Sidebar = () => {
     const response = await axios.post(
       `${BACKEND_URL}/chats/`,
       {
-        userId: 1,
+        userId: userId,
         workspaceId: workspaceId,
         type: "channel",
         channelName: newChannelName,
@@ -132,9 +132,10 @@ const Sidebar = () => {
     }
   }, [channelOpen, dMOpen]);
 
-  // so that chat bar will rerender and unread messages bubble disappears
+  // so that side bar will rerender and unread messages bubble disappears
   useEffect(() => {
     console.log("selected another chat");
+    // getChats();
   }, [selectedChatId]);
 
   const handleClick = (e) => {
@@ -160,7 +161,7 @@ const Sidebar = () => {
     const response = await axios.post(
       `${BACKEND_URL}/chats/`,
       {
-        userId: 1,
+        userId: userId,
         workspaceId: workspaceId,
         type: "direct message",
         channelName: null,
