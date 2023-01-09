@@ -7,6 +7,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../constants";
 import io from "socket.io-client";
 import SendIcon from "@mui/icons-material/Send";
+import { textAlign } from "@mui/system";
 
 const socket = io.connect("http://localhost:3002", {
   transports: ["websocket"],
@@ -22,7 +23,7 @@ const Body = () => {
   const [messagesList, setMessagesList] = useState();
   const [messageTyped, setMessageTyped] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
-  const [sortedMessagesList, setSortedMessagesList] = useState();
+  const [sortedMessagesDict, setSortedMessagesDict] = useState({});
   // const [nameAbbreviation, setNameAbbreviation] = useState("");
 
   const getMessageData = async () => {
@@ -58,37 +59,58 @@ const Body = () => {
     }
 
     setMessagesList(messageItemArr);
-    // console.log(messagesList[1]);
 
-    // sorting message data // it is already sorted when pulled out from database
-    let sortedMessageItemArr = [];
+    // sorting message data
+    let messageListDict = {};
 
     for (let i = 0; i < messageItemArr.length; i += 1) {
-      // different classes - msg-with-date, msg-with-dp, msg-only
+      let newDate = new Date(messageItemArr[i].date);
+      messageItemArr[i]["msgDate"] = newDate.toLocaleDateString([], {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      messageItemArr[i]["msgTime"] = newDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
-      if (i == 0) {
-        messageItemArr[i]["classNameTag"] = "msg-with-date";
-      } else {
-        if (
-          messageItemArr[i].date.split("T")[0] !=
-          messageItemArr[i - 1].date.split("T")[0]
-        ) {
-          messageItemArr[i]["classNameTag"] = "msg-with-date";
-        } else if (
-          messageItemArr[i].date.split("T")[0] ==
-            messageItemArr[i - 1].date.split("T")[0] &&
-          messageItemArr[i].userId != messageItemArr[i - 1].userId
-        ) {
-          messageItemArr[i]["classNameTag"] = "msg-with-dp";
-        } else {
-          messageItemArr[i]["classNameTag"] = "msg-only";
-        }
+      let currentMsgDate = messageItemArr[i]["msgDate"];
+      let currentMsgTime = messageItemArr[i]["msgTime"];
+
+      if (!(currentMsgDate in messageListDict)) {
+        messageListDict[currentMsgDate] = [];
       }
-      sortedMessageItemArr.push(messageItemArr[i]);
+
+      if (messageListDict[currentMsgDate].length >= 1) {
+        let lastDate = new Date(
+          messageListDict[currentMsgDate][
+            messageListDict[currentMsgDate].length - 1
+          ].date
+        );
+
+        // if between 2 dates, the timing is less than 10 minutes, then no need dp
+        let diff = (newDate.getTime() - lastDate.getTime()) / 1000 / 60;
+
+        if (
+          diff <= 10 &&
+          messageItemArr[i].userId ==
+            messageListDict[currentMsgDate][
+              messageListDict[currentMsgDate].length - 1
+            ].userId
+        ) {
+          messageItemArr[i]["classNameTag"] = "msg-only";
+        } else {
+          messageItemArr[i]["classNameTag"] = "msg-with-dp";
+        }
+      } else {
+        messageItemArr[i]["classNameTag"] = "msg-with-dp";
+      }
+      messageListDict[currentMsgDate].push(messageItemArr[i]);
     }
 
-    setSortedMessagesList(sortedMessageItemArr);
-    console.log(sortedMessageItemArr);
+    setSortedMessagesDict(messageListDict);
   };
 
   const joinRoom = () => {
@@ -141,45 +163,65 @@ const Body = () => {
   }, [socket]);
 
   return (
-    <div className="Body-content">
-      <div className="Body-message">
-        {sortedMessagesList?.map((messageItem, index) => (
-          <div key={index}>
-            <Message
-              date={messageItem.date}
-              text={messageItem.text}
-              abbreviatedName={messageItem.abbreviatedName}
-              username={messageItem.username}
-              classNameTag={messageItem.classNameTag}
-            />
-          </div>
-        ))}
-        {messageReceived?.map((messageItem, index) => (
-          <div key={index}>
-            <Message
-              date={messageItem.date}
-              text={messageItem.text}
-              abbreviatedName={messageItem.abbreviatedName}
-              username={messageItem.username}
-              classNameTag="msg-with-dp"
-            />
-          </div>
-        ))}
-        <div className="Message-input-box">
-          <textarea
-            type="input"
-            className="Message-input"
-            placeholder="Message..."
-            onChange={(event) => {
-              setMessageTyped(event.target.value);
-            }}
-          />
-          <button className="button2 button-hover" onClick={sendMessage}>
-            <SendIcon />
-          </button>
-        </div>
+    <>
+      <div className="Sidebar-Body-header Sidebar-body-header-only">
+        <div>{selectedChat}</div>
+        <div> {selectedChat ? "members" : ""}</div>
       </div>
-    </div>
+      <div className="Body-message-container">
+        <div className="Body-message">
+          {Object.entries(sortedMessagesDict)?.map((item) => {
+            const [dateOnly, messageArr] = item;
+            return (
+              <div className="Message-block">
+                <div className="Message-date">{dateOnly}</div>
+                <div className="Message-block-2">
+                  {messageArr?.map((messageItem, index) => (
+                    <div key={index}>
+                      <Message
+                        date={messageItem.date}
+                        msgDate={messageItem.msgDate}
+                        msgTime={messageItem.msgTime}
+                        text={messageItem.text}
+                        abbreviatedName={messageItem.abbreviatedName}
+                        username={messageItem.username}
+                        classNameTag={messageItem.classNameTag}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          {messageReceived?.map((messageItem, index) => (
+            <div key={index}>
+              <Message
+                date={messageItem.date}
+                text={messageItem.text}
+                abbreviatedName={messageItem.abbreviatedName}
+                username={messageItem.username}
+                classNameTag="msg-with-dp"
+              />
+            </div>
+          ))}
+        </div>
+        {selectedChat && (
+          <div className="Message-input-box">
+            <textarea
+              type="input"
+              className="Message-input"
+              placeholder="Message..."
+              onChange={(event) => {
+                setMessageTyped(event.target.value);
+              }}
+            />
+            <button className="button2 button-hover" onClick={sendMessage}>
+              <SendIcon />
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

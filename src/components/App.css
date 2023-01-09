@@ -1,20 +1,18 @@
 .Header {
-  background-color: rgb(18, 16, 22);
-  border-color: rgba(45, 47, 52, 1);
-  border-width: 1px;
-  border-style: solid;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 4vh;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  background-color: rgb(18, 16, 22);
+  border: 1px solid rgba(45, 47, 52, 1);
+  width: 100vw;
 }
 
 .Header-buttons {
-  width: 4rem;
   background-color: rgb(156, 159, 160);
+  width: 4rem;
+  height: 1.5rem;
   border: 1px solid;
   border-radius: 0.25rem;
 }
@@ -22,34 +20,40 @@
 .Home-content {
   display: flex;
   position: fixed;
-  width: 100%;
+  top: 1.5rem;
+  width: 100vw;
   height: 100vh;
-  top: 4vh;
 }
 
-.Home-header {
+.Sidebar-Body-header {
+  position: sticky;
   font-size: 18px;
   font-weight: bold;
   border-bottom: 0.5px solid rgb(106, 109, 119);
-  position: sticky;
   padding: 1rem;
   color: white;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 100%;
-  min-height: 1.5rem;
+  max-width: 100vw;
+  height: 1.5rem;
+}
+
+.Sidebar-body-header-only {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .Sidebar {
-  width: 20%;
-  max-width: 280vh;
-  min-width: 12vh;
-  background-color: #171517;
-  color: whitesmoke;
   display: flex;
   flex-direction: column;
+  background-color: #171517;
   border: 0.5px solid rgb(106, 109, 119);
+  color: whitesmoke;
+  width: 20vw;
+  max-width: 280vh;
+  min-width: 12vh;
 }
 
 .Sidebar-content {
@@ -62,33 +66,34 @@
 }
 
 .Sidebar-chat-item {
-  background-color: #171517;
-  color: white;
-  border: none;
-  padding-left: 5px;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0.1rem;
+  background-color: #171517;
+  color: white;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  padding: 0.1rem 0.1rem 0.1rem 0.8rem;
+  width: 100%;
+  min-height: 1.5rem;
+  margin-bottom: 0.1rem;
+}
+
+.Sidebar-overflow {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+}
+x .not-clickable {
+  pointer-events: none;
 }
 
 .Sidebar-chat-item:hover {
   background-color: rgb(43, 43, 49);
-}
-
-.Sidebar-overflow {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 100%;
-  min-height: 1.5rem;
-  display: inline-block;
-  text-align: left;
-  padding: 0.4rem;
 }
 
 .Sidebar-chat-header {
@@ -98,6 +103,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.Sidebar-chat-header-div {
+  display: flex;
+  align-items: center;
 }
 
 .Sidebar-new-chat {
@@ -117,11 +127,27 @@
   border: 0.5px solid rgb(106, 109, 119);
 }
 
+.Body-message {
+  overflow-y: scroll;
+  width: 100%;
+  height: calc(100% - 12.5rem);
+  flex: 1 1 auto;
+}
+
+.Body-message-container {
+  height: 100vh;
+}
+
+.Body-content {
+  height: calc(100% - 2.5rem);
+}
+
 .Message {
   margin: 3px;
   display: flex;
   flex-direction: row;
   color: whitesmoke;
+  width: 100%;
 }
 
 .Message:hover {
@@ -132,7 +158,8 @@
 .Message-profile-photo {
   height: 36px;
   line-height: 36px;
-  width: 36px;
+  max-width: 36x;
+  min-width: 36px;
   background-color: rgb(44, 81, 116);
   font-weight: bold;
   text-align: center;
@@ -145,6 +172,8 @@
   margin: 3px 10px 3px 10px;
   color: rgb(31, 31, 34);
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .Message-no-profile-photo:hover {
@@ -175,45 +204,50 @@
   font-size: 15px;
   margin: 3px;
   color: whitesmoke;
-}
-
-.Body-message {
-  overflow-y: scroll;
-  height: 62vh;
+  word-break: break-all;
 }
 
 .Message-date {
   border: 1px solid rgb(106, 109, 119);
   border-radius: 4vh;
-  text-align: center;
   color: whitesmoke;
   width: fit-content;
-  align-self: center;
   padding: 0.2rem 0.8rem 0.2rem 0.8rem;
   margin: 0.5rem;
+  position: sticky;
+  top: 0;
+  background-color: rgb(31, 31, 34);
+  display: flex;
+  justify-content: center;
+}
+
+.Message-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.Message-block-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
 }
 
 .Message-input-box {
-  position: absolute;
+  position: sticky;
   bottom: 0;
-  right: 0;
+  left: 0;
   display: flex;
-  border: 1px solid rgb(106, 109, 119);
   background-color: rgb(31, 31, 34);
-  border-radius: 1vh;
-  width: 69%;
-  display: flex;
-  align-items: center;
-  margin-bottom: 3rem;
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
-  padding-left: 3rem;
-  padding-right: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .Message-input {
   height: 7.5rem;
-  width: 90%;
+  width: 80%;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
@@ -362,6 +396,7 @@
   cursor: pointer;
   margin-right: 0.5rem;
   border: none;
+  padding: 0rem 0.5rem 0rem 0.5rem;
 }
 
 .button2 {
@@ -386,4 +421,18 @@
 ::-webkit-scrollbar-thumb {
   background-color: rgb(86, 86, 94);
   border-radius: 10rem;
+}
+
+.Modal-new-chat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: rgb(31, 31, 34);
+  color: whitesmoke;
+  border: 2px solid #000;
+  border-radius: 10px;
+  box-shadow: 24;
+  padding: 25px;
 }
