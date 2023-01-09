@@ -21,6 +21,7 @@ const Sidebar = () => {
     setSelectedChat,
     setSelectedChatId,
     usersList,
+    selectedChatId,
   } = useWorkspaceContext();
 
   const [chats, setChats] = useState();
@@ -43,7 +44,7 @@ const Sidebar = () => {
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
-      params: { userId: 4, workspaceId: workspaceId },
+      params: { userId: 3, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setChats(response.data);
@@ -130,6 +131,11 @@ const Sidebar = () => {
       getChats();
     }
   }, [channelOpen, dMOpen]);
+
+  // so that chat bar will rerender and unread messages bubble disappears
+  useEffect(() => {
+    console.log("selected another chat");
+  }, [selectedChatId]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);

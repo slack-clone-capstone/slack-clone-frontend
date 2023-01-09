@@ -185,6 +185,36 @@ const Body = () => {
     });
   }, [socket]);
 
+  // if user clicks into the chat, mark all the unread messages for that person as read
+  const handleClickReadAllChatMessage = async () => {
+    const accessToken = await getAccessTokenSilently({});
+    // get all the unread messageIds
+    // console.log(messagesList);
+
+    let unreadMessageIds = [];
+
+    messagesList.forEach((message) => {
+      if (message.isRead == false) {
+        console.log(message.id);
+        unreadMessageIds.push(message.id);
+      }
+    });
+
+    console.log(unreadMessageIds);
+
+    await axios.put(
+      `${BACKEND_URL}/messages/${selectedChatId}`,
+      { userId: userId, unreadMessageIds: unreadMessageIds },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+  };
+
+  useEffect(() => {
+    handleClickReadAllChatMessage();
+  }, [selectedChatId]);
+
   return (
     <>
       <div className="Sidebar-Body-header Sidebar-body-header-only">
