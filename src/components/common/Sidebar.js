@@ -35,6 +35,7 @@ const Sidebar = () => {
   const [dMOpen, setDMOpen] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
 
+  // refactoring
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
       audience: process.env.REACT_APP_AUDIENCE,
@@ -42,59 +43,55 @@ const Sidebar = () => {
     });
 
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
-      // for testing purposes, userId = 1
-      // params: { userId: userId, workspaceId: workspaceId },
       params: { userId: userId, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
+
     setChats(response.data);
-    console.log(response.data);
+
     console.log("Chats retrieved for " + user.given_name);
+    console.log(response.data);
 
-    const chatsListArr = [];
+    // for each chat, if it is a direct message, to retrieve usernames
+    response.data.forEach(async (response) => {
+      console.log(response.type);
 
-    for (let i = 0; i < response.data.length; i += 1) {
-      const chatItem = {};
-      chatItem["id"] = response.data[i].id;
-      chatItem["type"] = response.data[i].type;
-      chatItem["channelName"] = response.data[i].channel_name;
-      chatItem["channelDescription"] = response.data[i].channel_description;
-      chatItem["channelPrivate"] = response.data[i].channel_private;
-      chatItem["hasUnreadMessages"] = response.data[i].has_unread_messages;
-      chatItem["numUnreadMessages"] = response.data[i].num_unread_messages;
+      let directMessageName = "";
 
-      // if the chat is a Direct Message
-      if (response.data[i].type === "direct message") {
-        const chatIdToQuery = response.data[i].id;
-        const responseOfUsers = await axios.get(
-          `${BACKEND_URL}/chats/users/${chatIdToQuery}`,
-          {
+      if (response.type == "direct message") {
+        response.chat_users.forEach(async (userId) => {
+          const userData = await axios.get(`${BACKEND_URL}/users/${userId}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-        let directMessageName = "";
-        for (let j = 0; j < responseOfUsers.data.length; j += 1) {
-          const userIdInfo = responseOfUsers.data[j].userId;
-          const userResponse = await axios.get(
-            `${BACKEND_URL}/users/${userIdInfo}`,
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          );
-          const userNameToDisplay =
-            userResponse.data.first_name + " " + userResponse.data.last_name;
+          });
+
+          const userNameToDisplay = `${userData.data.first_name} ${userData.data.last_name}`;
+
           if (directMessageName.length === 0) {
             directMessageName = userNameToDisplay;
           } else {
             directMessageName += `, ${userNameToDisplay}`;
           }
-        }
-        chatItem["usersInDM"] = directMessageName;
+        });
       }
+      response["usersInDM"] = directMessageName;
+    });
 
+    // to change response data from snake_case to camelCase
+    let chatsListArr = [];
+    response.data.forEach((chat) => {
+      let chatItem = {};
+      chatItem["id"] = chat.id;
+      chatItem["channelName"] = chat.channel_name;
+      chatItem["channelDescription"] = chat.channel_description;
+      chatItem["type"] = chat.type;
+      chatItem["workspaceId"] = chat.workspace_id;
+      chatItem["chatUsers"] = chat.chat_users;
+      chatItem["numUnreadMessages"] = chat.num_unread_messages;
+      chatItem["hasUnreadMessages"] = chat.has_unread_messages;
       chatsListArr.push(chatItem);
-    }
+    });
 
+    console.log(chatsListArr);
     setChatsList(chatsListArr);
   };
 
