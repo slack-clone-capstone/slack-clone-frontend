@@ -70,40 +70,41 @@ const Sidebar = () => {
       chatItem["numUnreadMessages"] = response.data[i].num_unread_messages;
       chatItem["hasUnreadMessages"] = response.data[i].has_unread_messages;
 
-      // if the chat is a Direct Message
-      if (response.data[i].type === "direct message") {
-        const chatIdToQuery = response.data[i].id;
-        const responseOfUsers = await axios.get(
-          `${BACKEND_URL}/chats/users/${chatIdToQuery}`,
+      const chatIdToQuery = response.data[i].id;
+      const responseOfUsers = await axios.get(
+        `${BACKEND_URL}/chats/users/${chatIdToQuery}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      let directMessageName = "";
+      let usersInChat = [];
+
+      for (let j = 0; j < responseOfUsers.data.length; j += 1) {
+        const userIdInfo = responseOfUsers.data[j].userId;
+        const userResponse = await axios.get(
+          `${BACKEND_URL}/users/${userIdInfo}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
-
-        let directMessageName = "";
-
-        for (let j = 0; j < responseOfUsers.data.length; j += 1) {
-          const userIdInfo = responseOfUsers.data[j].userId;
-          const userResponse = await axios.get(
-            `${BACKEND_URL}/users/${userIdInfo}`,
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          );
-          const userNameToDisplay =
-            userResponse.data.first_name + " " + userResponse.data.last_name;
-          if (directMessageName.length === 0) {
-            directMessageName = userNameToDisplay;
-          } else {
-            directMessageName += `, ${userNameToDisplay}`;
-          }
+        usersInChat.push(userResponse.data);
+        const userNameToDisplay =
+          userResponse.data.first_name + " " + userResponse.data.last_name;
+        if (directMessageName.length === 0) {
+          directMessageName = userNameToDisplay;
+        } else {
+          directMessageName += `, ${userNameToDisplay}`;
         }
-        chatItem["usersInDM"] = directMessageName;
       }
+      chatItem["usersInDM"] = directMessageName;
+      chatItem["usersInChat"] = usersInChat;
 
       chatsListArr.push(chatItem);
     }
 
+    console.log(chatsListArr);
+    // to include differentiating mechanism for usersInChat (checked) and usersList (all users in workspace - unchecked)
     setChatsList(chatsListArr);
   };
 

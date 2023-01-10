@@ -40,9 +40,9 @@ const NewDmModal = ({
                   />
                 }
                 label={
-                  userItem.firstName +
+                  userItem.first_name +
                   " " +
-                  userItem.lastName +
+                  userItem.last_name +
                   " " +
                   userItem.username
                 }
