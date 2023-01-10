@@ -22,6 +22,8 @@ const Sidebar = () => {
     setSelectedChatId,
     usersList,
     selectedChatId,
+    refreshSidebar,
+    setRefreshSidebar,
   } = useWorkspaceContext();
 
   const [chats, setChats] = useState();
@@ -34,7 +36,7 @@ const Sidebar = () => {
   const [dMCollapsed, setDMCollapsed] = useState(false);
   const [dMOpen, setDMOpen] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
-  const [refreshSidebar, setRefreshSidebar] = useState(false);
+  // const [refreshSidebar, setRefreshSidebar] = useState(false);
 
   // refactoring
   const getChats = async () => {
@@ -137,13 +139,15 @@ const Sidebar = () => {
   }, [selectedChatId]);
 
   useEffect(() => {
+    console.log("refreshing sidebar in component sidebar");
     getChats();
+    console.log("get chats");
   }, [refreshSidebar]);
 
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
     setSelectedChatId(e.target.id);
-    setRefreshSidebar(!refreshSidebar);
+    setRefreshSidebar(!refreshSidebar); //manual for now as no auto rerender
   };
 
   const newChannelModal = () => {

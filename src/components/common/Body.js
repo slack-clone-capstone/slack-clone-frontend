@@ -14,7 +14,13 @@ const socket = io.connect("http://localhost:3002", {
 });
 
 const Body = () => {
-  const { selectedChat, selectedChatId } = useWorkspaceContext();
+  const {
+    selectedChat,
+    selectedChatId,
+    setSelectedChatId,
+    refreshSidebar,
+    setRefreshSidebar,
+  } = useWorkspaceContext();
   const { userId, userUsername, userFirstName, userLastName } =
     useUserContext();
   const { getAccessTokenSilently } = useAuth0();
@@ -156,9 +162,13 @@ const Body = () => {
       username: userUsername,
     };
     await socket.emit("send_message", messageToEmit);
+    await socket.emit("send_message_chat_status", {
+      selectedChatId,
+    });
 
     // assume that for user to send a message, he/she must have read all the messages already
     handleClickReadAllChatMessage();
+    setRefreshSidebar(!refreshSidebar); // this is to refresh own ui in case there are unread messages
   };
 
   useEffect(() => {
@@ -167,21 +177,27 @@ const Body = () => {
 
   useEffect(() => {
     console.log("socketon");
+
     socket.on("receive_message", (data) => {
       console.log(data);
+      console.log("socket message");
       setMessageReceived((message) => [...message, data]);
+    });
+
+    // if there is a new message received, refresh sidebar to indicate unread msgs
+    socket.on("receive_message_chat_status", (data) => {
+      if (data) {
+        setRefreshSidebar(!refreshSidebar);
+      }
     });
   }, [socket]);
 
   const handleTyping = () => {
-    // console.log("typing..");
     socket.emit("typing", { selectedChatId, userUsername });
   };
 
   useEffect(() => {
-    // console.log("typing response...");
     socket.on("typing_response", (data) => {
-      console.log(data);
       setTypingStatus(data);
 
       // after 3 seconds, clear typing status
@@ -191,20 +207,20 @@ const Body = () => {
     });
   }, [socket]);
 
-  // if user clicks into the chat, mark all the unread messages for that person as read
+  // mark all the unread messages for that person as read
   const handleClickReadAllChatMessage = async () => {
     const accessToken = await getAccessTokenSilently({});
-    // get all the unread messageIds
-    let unreadMessageIds = [];
+    let msgIdSet = new Set();
 
     messagesList.forEach((message) => {
       if (message.isRead == false) {
         console.log(message.id);
-        unreadMessageIds.push(message.id);
+        // unreadMessageIds.push(message.id);
+        msgIdSet.add(message.id);
       }
     });
 
-    console.log(unreadMessageIds); // to check regarding this rendering!!
+    let unreadMessageIds = Array.from(msgIdSet);
 
     await axios.put(
       `${BACKEND_URL}/messages/${selectedChatId}`,
@@ -219,7 +235,7 @@ const Body = () => {
     <>
       <div className="Sidebar-Body-header Sidebar-body-header-only">
         <div>{selectedChat}</div>
-        <div> {selectedChat ? "members" : ""}</div>
+        {/* <div> {selectedChat ? "members" : ""}</div> */}
       </div>
       <div className="Body-content">
         <div className="Body-message">
@@ -232,7 +248,7 @@ const Body = () => {
                   {messageArr?.map((messageItem, index) => (
                     <div key={index}>
                       <div style={{ color: "white" }}>
-                        {messageItem.isRead ? "read" : "unread"}
+                        {/* {messageItem.isRead ? "read" : "unread"} */}
                       </div>
                       <Message
                         date={messageItem.date}
