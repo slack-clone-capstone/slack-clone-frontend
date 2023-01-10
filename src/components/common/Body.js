@@ -14,13 +14,8 @@ const socket = io.connect("http://localhost:3002", {
 });
 
 const Body = () => {
-  const {
-    selectedChat,
-    selectedChatId,
-    setSelectedChatId,
-    refreshSidebar,
-    setRefreshSidebar,
-  } = useWorkspaceContext();
+  const { selectedChat, selectedChatId, refreshSidebar, setRefreshSidebar } =
+    useWorkspaceContext();
   const { userId, userUsername, userFirstName, userLastName } =
     useUserContext();
   const { getAccessTokenSilently } = useAuth0();
@@ -106,7 +101,7 @@ const Body = () => {
 
         if (
           diff <= 10 &&
-          messageItemArr[i].userId ==
+          messageItemArr[i].userId ===
             messageListDict[currentMsgDate][
               messageListDict[currentMsgDate].length - 1
             ].userId
@@ -169,6 +164,7 @@ const Body = () => {
     // assume that for user to send a message, he/she must have read all the messages already
     handleClickReadAllChatMessage();
     setRefreshSidebar(!refreshSidebar); // this is to refresh own ui in case there are unread messages
+    setMessageTyped("");
   };
 
   useEffect(() => {

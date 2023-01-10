@@ -11,6 +11,7 @@ import Grid3x3Icon from "@mui/icons-material/Grid3x3";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
+import { compose } from "@mui/system";
 
 const Sidebar = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -46,6 +47,8 @@ const Sidebar = () => {
     });
 
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
+      // for testing purposes, userId = 1
+      // params: { userId: userId, workspaceId: workspaceId },
       params: { userId: userId, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
@@ -55,46 +58,52 @@ const Sidebar = () => {
     console.log("Chats retrieved for " + user.given_name);
     console.log(response.data);
 
-    // for each chat, if it is a direct message, to retrieve usernames
-    response.data.forEach(async (response) => {
-      console.log(response.type);
+    let chatsListArr = [];
+    for (let i = 0; i < response.data.length; i += 1) {
+      const chatItem = {};
+      chatItem["id"] = response.data[i].id;
+      chatItem["channelName"] = response.data[i].channel_name;
+      chatItem["channelDescription"] = response.data[i].channel_description;
+      chatItem["type"] = response.data[i].type;
+      chatItem["workspaceId"] = response.data[i].workspace_id;
+      chatItem["chatUsers"] = response.data[i].chat_users;
+      chatItem["numUnreadMessages"] = response.data[i].num_unread_messages;
+      chatItem["hasUnreadMessages"] = response.data[i].has_unread_messages;
 
-      let directMessageName = "";
-
-      if (response.type == "direct message") {
-        response.chat_users.forEach(async (userId) => {
-          const userData = await axios.get(`${BACKEND_URL}/users/${userId}`, {
+      // if the chat is a Direct Message
+      if (response.data[i].type === "direct message") {
+        const chatIdToQuery = response.data[i].id;
+        const responseOfUsers = await axios.get(
+          `${BACKEND_URL}/chats/users/${chatIdToQuery}`,
+          {
             headers: { Authorization: `Bearer ${accessToken}` },
-          });
+          }
+        );
 
-          const userNameToDisplay = `${userData.data.first_name} ${userData.data.last_name}`;
+        let directMessageName = "";
 
+        for (let j = 0; j < responseOfUsers.data.length; j += 1) {
+          const userIdInfo = responseOfUsers.data[j].userId;
+          const userResponse = await axios.get(
+            `${BACKEND_URL}/users/${userIdInfo}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+          const userNameToDisplay =
+            userResponse.data.first_name + " " + userResponse.data.last_name;
           if (directMessageName.length === 0) {
             directMessageName = userNameToDisplay;
           } else {
             directMessageName += `, ${userNameToDisplay}`;
           }
-        });
+        }
+        chatItem["usersInDM"] = directMessageName;
       }
-      response["usersInDM"] = directMessageName;
-    });
 
-    // to change response data from snake_case to camelCase
-    let chatsListArr = [];
-    response.data.forEach((chat) => {
-      let chatItem = {};
-      chatItem["id"] = chat.id;
-      chatItem["channelName"] = chat.channel_name;
-      chatItem["channelDescription"] = chat.channel_description;
-      chatItem["type"] = chat.type;
-      chatItem["workspaceId"] = chat.workspace_id;
-      chatItem["chatUsers"] = chat.chat_users;
-      chatItem["numUnreadMessages"] = chat.num_unread_messages;
-      chatItem["hasUnreadMessages"] = chat.has_unread_messages;
       chatsListArr.push(chatItem);
-    });
+    }
 
-    console.log(chatsListArr);
     setChatsList(chatsListArr);
   };
 
@@ -176,8 +185,6 @@ const Sidebar = () => {
         channelPrivate: null,
         othersUserId: selectedUserIds,
       },
-      // for testing purposes, userId = 1
-      // params: { userId: userId, workspaceId: workspaceId },
       {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
@@ -194,12 +201,12 @@ const Sidebar = () => {
   };
 
   const updateChecks = (e) => {
-    if (e.target.checked === true && !selectedUserIds.includes(+e.target.id)) {
+    if (e.target.checked === true && !selectedUserIds.includes(e.target.id)) {
       setSelectedUserIds([...selectedUserIds, e.target.id]);
     }
-    if (e.target.checked === false && selectedUserIds.includes(+e.target.id)) {
+    if (e.target.checked === false && selectedUserIds.includes(e.target.id)) {
       let cloneSelectedUserIds = [...selectedUserIds];
-      let indexForDeletion = selectedUserIds.indexOf(+e.target.id);
+      let indexForDeletion = selectedUserIds.indexOf(e.target.id);
       if (indexForDeletion === 0 && cloneSelectedUserIds.length === 1) {
         setSelectedUserIds([]);
       } else {
@@ -215,7 +222,9 @@ const Sidebar = () => {
 
   const submitNewDM = (e) => {
     e.preventDefault();
-    createNewDM();
+    if (selectedUserIds.length !== 0) {
+      createNewDM();
+    }
   };
 
   const handleClickCollapsible = (e) => {
@@ -274,6 +283,7 @@ const Sidebar = () => {
                       onClick={handleClick}
                       id={chat.id}
                       name={chat.channelName}
+                      style={{ paddingRight: "0.5rem" }}
                     >
                       <div className="Sidebar-channel-icon-and-name">
                         <div
@@ -331,7 +341,6 @@ const Sidebar = () => {
                       }
                       onClick={handleClick}
                       id={chat.id}
-                      name={chat.channelName}
                       name={chat.usersInDM}
                     >
                       <div className="Sidebar-channel-icon-and-name">

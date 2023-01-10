@@ -54,6 +54,7 @@ const Login = () => {
     );
 
     setUserId(response.data.id);
+    //setUserId(1);
     console.log("Backend user data updated.");
     setUserFirstName(user.given_name);
     setUserLastName(user.family_name);
