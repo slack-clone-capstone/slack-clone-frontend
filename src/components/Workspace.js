@@ -114,29 +114,34 @@ const Workspace = () => {
     setWorkspaceList(workspaceListArr);
   };
 
-  const getUsers = async () => {
+  const getUsers = async (workspaceIdDetails) => {
     const accessToken = await getAccessTokenSilently({
       audience: process.env.REACT_APP_AUDIENCE,
       scope: process.env.REACT_APP_SCOPE,
     });
-
-    const response = await axios.get(`${BACKEND_URL}/users/`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await axios.get(
+      `${BACKEND_URL}/userWorkspaces/usersinfo`,
+      {
+        params: { workspaceId: workspaceIdDetails },
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
     console.log("All users data retrieved");
 
     const usersListArr = [];
 
     for (let i = 0; i < response.data.length; i += 1) {
-      console.log(response.data[i].first_name);
-      if (response.data[i].id != userId) {
+      // create user list without actual user
+      if (response.data[i].userId !== userId) {
         const userItem = {};
-        userItem["id"] = response.data[i].id;
-        userItem["firstName"] = response.data[i].first_name;
-        userItem["lastName"] = response.data[i].last_name;
-        userItem["email"] = response.data[i].email;
-        userItem["username"] = response.data[i].username;
-        usersListArr.push(userItem);
+        const userIdInfo = response.data[i].userId;
+        const userResponse = await axios.get(
+          `${BACKEND_URL}/users/${userIdInfo}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        usersListArr.push(userResponse.data);
       }
     }
     setUsersList(usersListArr);
@@ -155,7 +160,7 @@ const Workspace = () => {
   const handleClick = (e) => {
     setWorkspaceId(e.target.id);
     setSelectedWorkspace(e.target.name);
-    getUsers();
+    getUsers(e.target.id);
     navigate("/");
   };
 
