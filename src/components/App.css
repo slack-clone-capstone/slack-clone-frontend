@@ -65,9 +65,15 @@
   height: 89vh;
 }
 
+.Sidebar-channel-icon-and-name {
+  display: flex;
+  justify-content: space-between;
+}
+
 .Sidebar-chat-item {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   background-color: #171517;
   color: white;
@@ -78,7 +84,24 @@
   padding: 0.1rem 0.1rem 0.1rem 0.8rem;
   width: 100%;
   min-height: 1.5rem;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.Sidebar-chat-item-bold {
+  font-weight: bold;
+}
+
+.Sidebar-unread-message-bubble {
+  position: sticky;
+  right: 0;
+  background-color: red;
+  width: fit-content;
+  min-width: 25px;
+  border-radius: 20px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0px 5px 0px 5px;
+  margin: 0px 10px 0px 10px;
 }
 
 .Sidebar-overflow {
@@ -87,8 +110,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-align: left;
+  width: calc(12vw - 15px);
+  margin-right: 0.5rem;
 }
-x .not-clickable {
+
+.not-clickable {
   pointer-events: none;
 }
 
@@ -134,12 +160,8 @@ x .not-clickable {
   flex: 1 1 auto;
 }
 
-.Body-message-container {
-  height: 100vh;
-}
-
 .Body-content {
-  height: calc(100% - 2.5rem);
+  height: calc(100% - 3.5rem);
 }
 
 .Message {
@@ -235,7 +257,7 @@ x .not-clickable {
   width: 100%;
 }
 
-.Message-input-box {
+.Message-editor {
   position: sticky;
   bottom: 0;
   left: 0;
@@ -245,11 +267,34 @@ x .not-clickable {
   justify-content: center;
 }
 
+.Message-typing {
+  color: whitesmoke;
+  text-align: left;
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 0.5rem;
+  min-height: 1rem;
+}
+
 .Message-input {
   height: 7.5rem;
-  width: 80%;
-  margin-top: 1rem;
+  width: 100%;
+  margin-top: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.Message-input-box {
+  display: flex;
+  background-color: rgb(31, 31, 34);
+  width: 80%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: left;
+}
+
+.Message-box {
+  display: flex;
+  flex-direction: row;
 }
 
 .Workspace {

@@ -10,6 +10,8 @@ import LockIcon from "@mui/icons-material/Lock";
 import Grid3x3Icon from "@mui/icons-material/Grid3x3";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
+import { compose } from "@mui/system";
 
 const Sidebar = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -20,6 +22,9 @@ const Sidebar = () => {
     setSelectedChat,
     setSelectedChatId,
     usersList,
+    selectedChatId,
+    refreshSidebar,
+    setRefreshSidebar,
   } = useWorkspaceContext();
 
   const [chats, setChats] = useState();
@@ -32,7 +37,9 @@ const Sidebar = () => {
   const [dMCollapsed, setDMCollapsed] = useState(false);
   const [dMOpen, setDMOpen] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+  // const [refreshSidebar, setRefreshSidebar] = useState(false);
 
+  // refactoring
   const getChats = async () => {
     const accessToken = await getAccessTokenSilently({
       audience: process.env.REACT_APP_AUDIENCE,
@@ -42,21 +49,26 @@ const Sidebar = () => {
     const response = await axios.get(`${BACKEND_URL}/chats/`, {
       // for testing purposes, userId = 1
       // params: { userId: userId, workspaceId: workspaceId },
-      params: { userId: 1, workspaceId: workspaceId },
+      params: { userId: userId, workspaceId: workspaceId },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
+
     setChats(response.data);
+
     console.log("Chats retrieved for " + user.given_name);
+    console.log(response.data);
 
-    const chatsListArr = [];
-
+    let chatsListArr = [];
     for (let i = 0; i < response.data.length; i += 1) {
       const chatItem = {};
       chatItem["id"] = response.data[i].id;
-      chatItem["type"] = response.data[i].type;
       chatItem["channelName"] = response.data[i].channel_name;
       chatItem["channelDescription"] = response.data[i].channel_description;
-      chatItem["channelPrivate"] = response.data[i].channel_private;
+      chatItem["type"] = response.data[i].type;
+      chatItem["workspaceId"] = response.data[i].workspace_id;
+      chatItem["chatUsers"] = response.data[i].chat_users;
+      chatItem["numUnreadMessages"] = response.data[i].num_unread_messages;
+      chatItem["hasUnreadMessages"] = response.data[i].has_unread_messages;
 
       const chatIdToQuery = response.data[i].id;
       const responseOfUsers = await axios.get(
@@ -91,6 +103,7 @@ const Sidebar = () => {
       chatsListArr.push(chatItem);
     }
 
+    console.log(chatsListArr);
     // to include differentiating mechanism for usersInChat (checked) and usersList (all users in workspace - unchecked)
     setChatsList(chatsListArr);
   };
@@ -101,7 +114,7 @@ const Sidebar = () => {
     const response = await axios.post(
       `${BACKEND_URL}/chats/`,
       {
-        userId: 1,
+        userId: userId,
         workspaceId: workspaceId,
         type: "channel",
         channelName: newChannelName,
@@ -129,9 +142,22 @@ const Sidebar = () => {
     }
   }, [channelOpen, dMOpen]);
 
+  // so that side bar will rerender and unread messages bubble disappears
+  useEffect(() => {
+    console.log("selected another chat");
+    getChats();
+  }, [selectedChatId]);
+
+  useEffect(() => {
+    console.log("refreshing sidebar in component sidebar");
+    getChats();
+    console.log("get chats");
+  }, [refreshSidebar]);
+
   const handleClick = (e) => {
     setSelectedChat(e.target.name);
     setSelectedChatId(e.target.id);
+    setRefreshSidebar(!refreshSidebar); //manual for now as no auto rerender
   };
 
   const newChannelModal = () => {
@@ -152,7 +178,7 @@ const Sidebar = () => {
     const response = await axios.post(
       `${BACKEND_URL}/chats/`,
       {
-        userId: 1,
+        userId: userId,
         workspaceId: workspaceId,
         type: "direct message",
         channelName: null,
@@ -250,15 +276,30 @@ const Sidebar = () => {
                 chat.type === "channel" && (
                   <div key={index}>
                     <button
-                      className="Sidebar-chat-item not-clickable Sidebar-overflow "
+                      className={
+                        chat.hasUnreadMessages
+                          ? `Sidebar-chat-item Sidebar-chat-item-bold`
+                          : `Sidebar-chat-item`
+                      }
                       onClick={handleClick}
                       id={chat.id}
                       name={chat.channelName}
                       style={{ paddingRight: "0.5rem" }}
                     >
-                      {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}{" "}
-                      &nbsp;
-                      {chat.channelName}
+                      <div className="Sidebar-channel-icon-and-name">
+                        <div
+                          className="not-clickable"
+                          style={{ paddingRight: "0.5rem" }}
+                        >
+                          {chat.channelPrivate ? <LockIcon /> : <Grid3x3Icon />}
+                        </div>
+                        <div className="Sidebar-overflow not-clickable">
+                          {chat.channelName}
+                        </div>
+                      </div>
+                      <div className="Sidebar-unread-message-bubble not-clickable">
+                        {chat.hasUnreadMessages && chat.numUnreadMessages}
+                      </div>
                     </button>
                   </div>
                 )
@@ -294,13 +335,30 @@ const Sidebar = () => {
                 chat.type === "direct message" && (
                   <div key={index}>
                     <button
-                      className="Sidebar-chat-item Sidebar-overflow"
+                      className={
+                        chat.hasUnreadMessages
+                          ? `Sidebar-chat-item Sidebar-chat-item-bold `
+                          : `Sidebar-chat-item `
+                      }
                       onClick={handleClick}
                       id={chat.id}
                       name={chat.usersInDM}
                     >
-                      {chat.channelName}
-                      {chat.usersInDM}
+                      <div className="Sidebar-channel-icon-and-name">
+                        <div
+                          className="not-clickable"
+                          style={{ paddingRight: "0.5rem" }}
+                        >
+                          <PeopleAltRoundedIcon />
+                        </div>
+                        <div className="Sidebar-overflow not-clickable">
+                          {chat.channelName}
+                          {chat.usersInDM}
+                        </div>
+                      </div>
+                      <div className="Sidebar-unread-message-bubble not-clickable">
+                        {chat.hasUnreadMessages && chat.numUnreadMessages}
+                      </div>
                     </button>
                   </div>
                 )

@@ -11,6 +11,7 @@ const WorkspaceContextProvider = ({ children }) => {
   const [selectedChatId, setSelectedChatId] = useState("");
   const [usersList, setUsersList] = useState([]);
   const [checksList, setChecksList] = useState();
+  const [refreshSidebar, setRefreshSidebar] = useState(false);
   const value = {
     workspaceId,
     setWorkspaceId,
@@ -24,6 +25,8 @@ const WorkspaceContextProvider = ({ children }) => {
     setUsersList,
     checksList,
     setChecksList,
+    refreshSidebar,
+    setRefreshSidebar,
   };
 
   return (
